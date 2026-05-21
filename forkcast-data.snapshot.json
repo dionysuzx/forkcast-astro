@@ -2,8 +2,8 @@
 	"snapshotId": "20260521T024753Z-4e59f2b3cb10",
 	"source": "forkcast-data",
 	"latestRoot": "/Users/lucy/fun/forkcast-data/dist/latest",
-	"dataBaseUrl": "http://localhost:8888",
-	"updatedAt": "2026-05-21T02:48:04.290Z",
+	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
+	"updatedAt": "2026-05-21T03:13:12.695Z",
 	"counts": {
 		"eips": 13,
 		"calls": 75,
