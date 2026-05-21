@@ -43,7 +43,7 @@ jobs:
         env:
           TARGET_SNAPSHOT: ${{ inputs.target_snapshot }}
           FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-canonical.netlify.app' }}
       - run: pnpm verify
       - if: ${{ inputs.deploy_target == 'preview' }}
         run: npx netlify deploy --no-build --dir=dist

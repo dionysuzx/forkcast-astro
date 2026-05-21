@@ -43,7 +43,7 @@ jobs:
       - name: Check remote snapshot
         id: snapshot
         env:
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-canonical.netlify.app' }}
           FORCE_REBUILD: ${{ inputs.force_rebuild || false }}
           EVENT_NAME: ${{ github.event_name }}
           DISPATCH_SNAPSHOT: ${{ github.event.client_payload.snapshot }}
@@ -75,7 +75,7 @@ jobs:
           pnpm data:forkcast-snapshot -- --latest-root "$latest_root" --data-base-url "$FORKCAST_DATA_BASE_URL"
         env:
           FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-canonical.netlify.app' }}
       - if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: pnpm verify
       - name: Commit pinned snapshot
