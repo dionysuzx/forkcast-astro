@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260521T210936Z-45d70693161b",
+	"snapshotId": "20260521T211750Z-ebade2bd5994",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-21T21:15:46.933Z",
+	"updatedAt": "2026-05-21T21:24:37.368Z",
 	"counts": {
-		"records": 29326,
+		"records": 29328,
 		"eips": 921,
-		"calls": 678,
-		"decisions": 214,
-		"searchDocuments": 31261
+		"calls": 680,
+		"decisions": 216,
+		"searchDocuments": 31269
 	},
 	"kindCounts": {
-		"call": 678,
+		"call": 680,
 		"devnet": 12,
 		"proposal": 921,
 		"thread": 26619,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260521T210936Z-45d70693161b",
-		"generated_at": "2026-05-21T21:09:36.925Z",
-		"catalog_path": "/snapshots/20260521T210936Z-45d70693161b/catalog.json",
-		"record_count": 29326
+		"snapshot_id": "20260521T211750Z-ebade2bd5994",
+		"generated_at": "2026-05-21T21:17:50.976Z",
+		"catalog_path": "/snapshots/20260521T211750Z-ebade2bd5994/catalog.json",
+		"record_count": 29328
 	},
 	"eips": [
 		{
@@ -6835,6 +6835,24 @@
 			"title": "PM Lean Fixture Live Cycle 36: SFI movement watch",
 			"canonical_json_url": "/latest/calls/fixture-acde/900036.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900036.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900037",
+			"series": "fixture-acde",
+			"number": 900037,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 37: Glamsterdam BAL status",
+			"canonical_json_url": "/latest/calls/fixture-acde/900037.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900037.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900038",
+			"series": "fixture-acde",
+			"number": 900038,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 38: EIP-7702 wallet impact",
+			"canonical_json_url": "/latest/calls/fixture-acde/900038.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900038.md"
 		},
 		{
 			"id": "allwalletdevs/2026.05.20-39",
