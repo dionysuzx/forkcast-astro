@@ -26,6 +26,10 @@ on:
 jobs:
   rebuild:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      DEPLOY_TARGET: ${{ inputs.deploy_target || vars.FORKCAST_ASTRO_DEPLOY_TARGET || 'prod' }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
@@ -42,8 +46,17 @@ jobs:
           FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
           FORCE_REBUILD: ${{ inputs.force_rebuild || false }}
           EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_SNAPSHOT: ${{ github.event.client_payload.snapshot }}
         run: |
-          remote_id=$(node --input-type=module -e "const r=await fetch(process.env.FORKCAST_DATA_BASE_URL.replace(/\/$/, '') + '/latest/manifest.json'); if(!r.ok) throw new Error(String(r.status)); const j=await r.json(); console.log(j.snapshot_id)")
+          remote_id=""
+          for attempt in $(seq 1 18); do
+            remote_id=$(node --input-type=module -e "const r=await fetch(process.env.FORKCAST_DATA_BASE_URL.replace(/\/$/, '') + '/latest/manifest.json', { cache: 'no-store' }); if(!r.ok) throw new Error(String(r.status)); const j=await r.json(); console.log(j.snapshot_id)")
+            if [ -z "$DISPATCH_SNAPSHOT" ] || [ "$DISPATCH_SNAPSHOT" = "$remote_id" ]; then
+              break
+            fi
+            echo "Waiting for Netlify latest snapshot. expected=$DISPATCH_SNAPSHOT observed=$remote_id attempt=$attempt"
+            sleep 10
+          done
           current_id=$(node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync('forkcast-data.snapshot.json', 'utf8')).snapshotId)")
           should_rebuild=false
           if [ "$remote_id" != "$current_id" ] || [ "$FORCE_REBUILD" = "true" ] || [ "$EVENT_NAME" = "repository_dispatch" ]; then
@@ -51,6 +64,10 @@ jobs:
           fi
           echo "remote_id=$remote_id" >> "$GITHUB_OUTPUT"
           echo "should_rebuild=$should_rebuild" >> "$GITHUB_OUTPUT"
+          if [ -n "$DISPATCH_SNAPSHOT" ] && [ "$DISPATCH_SNAPSHOT" != "$remote_id" ]; then
+            echo "Repository dispatch snapshot $DISPATCH_SNAPSHOT does not match remote latest $remote_id"
+            exit 1
+          fi
       - name: Sync pinned snapshot
         if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: |
@@ -61,14 +78,26 @@ jobs:
           FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
       - if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: pnpm verify
+      - name: Commit pinned snapshot
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add forkcast-data.snapshot.json src/domain/forkcast-data/pinned-snapshot.json
+          if git diff --cached --quiet; then
+            echo "Pinned snapshot already committed"
+          else
+            git commit -m "Pin Forkcast data snapshot ${{ steps.snapshot.outputs.remote_id }}"
+            git push
+          fi
       - name: Deploy preview
-        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && inputs.deploy_target != 'prod' }}
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET != 'prod' }}
         run: npx netlify deploy --dir=dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - name: Deploy production
-        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && inputs.deploy_target == 'prod' }}
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'prod' }}
         run: npx netlify deploy --prod --dir=dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

@@ -31,6 +31,19 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Sync requested snapshot
+        if: ${{ inputs.target_snapshot != '' || inputs.force_rebuild == true }}
+        run: |
+          if [ -n "${TARGET_SNAPSHOT}" ]; then
+            latest_root="${FORKCAST_DATA_BASE_URL%/}/snapshots/${TARGET_SNAPSHOT}"
+          else
+            latest_root="${FORKCAST_DATA_LATEST_ROOT:-${FORKCAST_DATA_BASE_URL%/}/latest}"
+          fi
+          pnpm data:forkcast-snapshot -- --latest-root "$latest_root" --data-base-url "$FORKCAST_DATA_BASE_URL"
+        env:
+          TARGET_SNAPSHOT: ${{ inputs.target_snapshot }}
+          FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
       - run: pnpm verify
       - if: ${{ inputs.deploy_target == 'preview' }}
         run: npx netlify deploy --dir=dist
