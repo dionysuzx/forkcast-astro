@@ -1,13 +1,13 @@
 {
-	"snapshotId": "20260521T024753Z-4e59f2b3cb10",
+	"snapshotId": "20260521T040206Z-25c30371eb94",
 	"source": "forkcast-data",
-	"latestRoot": "/Users/lucy/fun/forkcast-data/dist/latest",
+	"latestRoot": "https://forkcast-data-dionysuzx.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
-	"updatedAt": "2026-05-21T03:13:12.695Z",
+	"updatedAt": "2026-05-21T04:03:42.956Z",
 	"counts": {
 		"eips": 13,
-		"calls": 75,
-		"decisions": 133,
-		"searchDocuments": 221
+		"calls": 77,
+		"decisions": 135,
+		"searchDocuments": 225
 	}
 }

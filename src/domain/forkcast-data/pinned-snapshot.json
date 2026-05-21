@@ -1,21 +1,21 @@
 {
-	"snapshotId": "20260521T024753Z-4e59f2b3cb10",
+	"snapshotId": "20260521T040206Z-25c30371eb94",
 	"source": "forkcast-data",
-	"latestRoot": "/Users/lucy/fun/forkcast-data/dist/latest",
+	"latestRoot": "https://forkcast-data-dionysuzx.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
-	"updatedAt": "2026-05-21T03:13:12.695Z",
+	"updatedAt": "2026-05-21T04:03:42.956Z",
 	"counts": {
 		"eips": 13,
-		"calls": 75,
-		"decisions": 133,
-		"searchDocuments": 221
+		"calls": 77,
+		"decisions": 135,
+		"searchDocuments": 225
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260521T024753Z-4e59f2b3cb10",
-		"generated_at": "2026-05-21T02:47:53.598Z",
-		"catalog_path": "/snapshots/20260521T024753Z-4e59f2b3cb10/catalog.json",
-		"record_count": 113,
+		"snapshot_id": "20260521T040206Z-25c30371eb94",
+		"generated_at": "2026-05-21T04:02:06.312Z",
+		"catalog_path": "/snapshots/20260521T040206Z-25c30371eb94/catalog.json",
+		"record_count": 115,
 		"read_models": [
 			"calls/acdc/174.json",
 			"calls/acdc/174.md",
@@ -79,6 +79,10 @@
 			"calls/fcr/6.md",
 			"calls/fcr/7.json",
 			"calls/fcr/7.md",
+			"calls/fixture-acde/900002.json",
+			"calls/fixture-acde/900002.md",
+			"calls/fixture-acde/900003.json",
+			"calls/fixture-acde/900003.md",
 			"calls/focil/29.json",
 			"calls/focil/29.md",
 			"calls/focil/30.json",
@@ -507,6 +511,80 @@
 					"url": "/records/call/fast-confirmation-rule-fcr/2026.05.26-8/manifest.json",
 					"label": "Fast Confirmation Rule (FCR) #8, May 26, 2026",
 					"snippet": "Fast Confirmation Rule (FCR) #8, May 26, 2026"
+				}
+			]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900002",
+			"series": "fixture-acde",
+			"number": 900002,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+			"summary": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":2,\"topic\":\"EIP-7702 wallet impact\",\"eip\":\"EIP-7702\",\"summary\":\"Wallet and account-abstraction teams should review delegation safety text.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"Wallet impact notes were refreshed and linked to delegation UX follow-up.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM creden",
+			"decisions": [
+				{
+					"id": "fixture-acde/2026.05.21-900002#decision-1",
+					"record_id": "fixture-acde/2026.05.21-900002",
+					"title": "Wallet impact notes were refreshed and linked to delegation UX follow-up.",
+					"decided_at": "00:00:14",
+					"canonical_url": "/latest/decisions/index.ndjson",
+					"citations": [
+						{
+							"recordId": "fixture-acde/2026.05.21-900002",
+							"artifactPath": "derived/call-intelligence.json",
+							"url": "/records/call/fixture-acde/2026.05.21-900002/derived/call-intelligence.json",
+							"label": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+							"snippet": "Wallet impact notes were refreshed and linked to delegation UX follow-up."
+						}
+					]
+				}
+			],
+			"canonical_json_url": "/latest/calls/fixture-acde/900002.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900002.md",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900002",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900002/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+					"snippet": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact"
+				}
+			]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900003",
+			"series": "fixture-acde",
+			"number": 900003,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+			"summary": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":3,\"topic\":\"SFI movement watch\",\"eip\":\"EIP-8253\",\"summary\":\"Fork planners should compare replacement scope against existing Glamsterdam candidates.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"SFI watchlist fixture advanced a candidate replacement discussion.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM cred",
+			"decisions": [
+				{
+					"id": "fixture-acde/2026.05.21-900003#decision-1",
+					"record_id": "fixture-acde/2026.05.21-900003",
+					"title": "SFI watchlist fixture advanced a candidate replacement discussion.",
+					"decided_at": "00:00:14",
+					"canonical_url": "/latest/decisions/index.ndjson",
+					"citations": [
+						{
+							"recordId": "fixture-acde/2026.05.21-900003",
+							"artifactPath": "derived/call-intelligence.json",
+							"url": "/records/call/fixture-acde/2026.05.21-900003/derived/call-intelligence.json",
+							"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+							"snippet": "SFI watchlist fixture advanced a candidate replacement discussion."
+						}
+					]
+				}
+			],
+			"canonical_json_url": "/latest/calls/fixture-acde/900003.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900003.md",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900003",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900003/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+					"snippet": "PM Lean Fixture Live Cycle 3: SFI movement watch"
 				}
 			]
 		},
@@ -5058,6 +5136,38 @@
 			]
 		},
 		{
+			"id": "fixture-acde/2026.05.21-900002#decision-1",
+			"record_id": "fixture-acde/2026.05.21-900002",
+			"title": "Wallet impact notes were refreshed and linked to delegation UX follow-up.",
+			"decided_at": "00:00:14",
+			"canonical_url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900002",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900002/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+					"snippet": "Wallet impact notes were refreshed and linked to delegation UX follow-up."
+				}
+			]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900003#decision-1",
+			"record_id": "fixture-acde/2026.05.21-900003",
+			"title": "SFI watchlist fixture advanced a candidate replacement discussion.",
+			"decided_at": "00:00:14",
+			"canonical_url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900003",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900003/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+					"snippet": "SFI watchlist fixture advanced a candidate replacement discussion."
+				}
+			]
+		},
+		{
 			"id": "focil/2026.04.21-33#decision-1",
 			"record_id": "focil/2026.04.21-33",
 			"title": "FOCIL devnets will be based on glamsterdam-devnet-0 specifications",
@@ -6527,6 +6637,40 @@
 					"url": "/records/call/fast-confirmation-rule-fcr/2026.05.26-8/manifest.json",
 					"label": "Fast Confirmation Rule (FCR) #8, May 26, 2026",
 					"snippet": "Fast Confirmation Rule (FCR) #8, May 26, 2026"
+				}
+			],
+			"tags": ["call"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900002",
+			"kind": "call",
+			"title": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+			"body": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":2,\"topic\":\"EIP-7702 wallet impact\",\"eip\":\"EIP-7702\",\"summary\":\"Wallet and account-abstraction teams should review delegation safety text.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"Wallet impact notes were refreshed and linked to delegation UX follow-up.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM creden Wallet impact notes were refreshed and linked to delegation UX follow-up.",
+			"url": "/latest/calls/fixture-acde/900002.json",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900002",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900002/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+					"snippet": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact"
+				}
+			],
+			"tags": ["call"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900003",
+			"kind": "call",
+			"title": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+			"body": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":3,\"topic\":\"SFI movement watch\",\"eip\":\"EIP-8253\",\"summary\":\"Fork planners should compare replacement scope against existing Glamsterdam candidates.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"SFI watchlist fixture advanced a candidate replacement discussion.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM cred SFI watchlist fixture advanced a candidate replacement discussion.",
+			"url": "/latest/calls/fixture-acde/900003.json",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900003",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900003/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+					"snippet": "PM Lean Fixture Live Cycle 3: SFI movement watch"
 				}
 			],
 			"tags": ["call"]
@@ -8737,6 +8881,40 @@
 					"url": "/records/call/fcr/2026.05.12-7/derived/call-intelligence.json",
 					"label": "Fast Confirmation Rule #7",
 					"snippet": "FCR spec will be made gGLOSSS-compatible via fork choice abstraction layer refactor; if infeasible, spec will be made fork-aware instead"
+				}
+			],
+			"tags": ["decision"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900002#decision-1",
+			"kind": "decision",
+			"title": "Wallet impact notes were refreshed and linked to delegation UX follow-up.",
+			"body": "Wallet impact notes were refreshed and linked to delegation UX follow-up.",
+			"url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900002",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900002/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 2: EIP-7702 wallet impact",
+					"snippet": "Wallet impact notes were refreshed and linked to delegation UX follow-up."
+				}
+			],
+			"tags": ["decision"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900003#decision-1",
+			"kind": "decision",
+			"title": "SFI watchlist fixture advanced a candidate replacement discussion.",
+			"body": "SFI watchlist fixture advanced a candidate replacement discussion.",
+			"url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900003",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900003/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
+					"snippet": "SFI watchlist fixture advanced a candidate replacement discussion."
 				}
 			],
 			"tags": ["decision"]
