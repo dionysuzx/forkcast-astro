@@ -1,9 +1,9 @@
 {
-	"snapshotId": "20260521T182009Z-0d79aec9bf75",
+	"snapshotId": "20260521T183606Z-d91987d699a2",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-21T18:26:07.812Z",
+	"updatedAt": "2026-05-21T18:42:20.679Z",
 	"counts": {
 		"records": 28652,
 		"eips": 921,
