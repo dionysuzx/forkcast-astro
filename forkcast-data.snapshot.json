@@ -1,14 +1,14 @@
 {
-	"snapshotId": "20260521T183606Z-d91987d699a2",
+	"snapshotId": "20260521T184434Z-58fc2a2fae23",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-21T18:42:20.679Z",
+	"updatedAt": "2026-05-21T18:51:53.303Z",
 	"counts": {
-		"records": 28652,
+		"records": 28653,
 		"eips": 921,
-		"calls": 672,
-		"decisions": 208,
-		"searchDocuments": 30569
+		"calls": 673,
+		"decisions": 209,
+		"searchDocuments": 30573
 	}
 }
