@@ -27,6 +27,6 @@ The app avoids runtime product-data fetches by keeping build-time snapshots in t
 - `pnpm data:complexity`
 - `pnpm data:forkcast-snapshot`
 
-`forkcast-data.snapshot.json` pins the canonical data-plane snapshot used by Astro. The `Snapshot Rebuild` GitHub Action runs every 30 minutes and also responds to `forkcast-data` repository dispatches. When the data-plane `/latest/manifest.json` changes, the workflow syncs the pin, verifies the static build, commits the pin update, and deploys Netlify. Scheduled and repository-dispatch runs deploy production by default; manual dispatch can choose preview.
+`forkcast-data.snapshot.json` pins the canonical data-plane snapshot used by Astro. The `Snapshot Rebuild` GitHub Action runs every 10 minutes and also responds immediately to `forkcast-data` repository dispatches. When the data-plane `/latest/manifest.json` changes, the workflow syncs the pin, verifies the static build, commits the pin update, and deploys Netlify. Scheduled and repository-dispatch runs deploy production by default; manual dispatch can choose preview.
 
 Migration inventory, parity review, and benchmark artifacts are stored in `docs/migration/`.
