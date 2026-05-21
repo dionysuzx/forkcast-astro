@@ -87,7 +87,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Pinned snapshot already committed"
           else
-            git commit -m "Pin Forkcast data snapshot ${{ steps.snapshot.outputs.remote_id }}"
+            git commit --no-verify -m "Pin Forkcast data snapshot ${{ steps.snapshot.outputs.remote_id }}"
             git push
           fi
       - name: Deploy preview
