@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260521T081719Z-3497374ef8f4",
+	"snapshotId": "20260521T084341Z-bdf98b2afe4a",
 	"source": "forkcast-data",
-	"latestRoot": "https://forkcast-data-dionysuzx.netlify.app/latest",
-	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
-	"updatedAt": "2026-05-21T08:24:13.952Z",
+	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
+	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
+	"updatedAt": "2026-05-21T08:49:44.269Z",
 	"counts": {
-		"records": 28611,
+		"records": 28613,
 		"eips": 921,
-		"calls": 648,
-		"decisions": 184,
-		"searchDocuments": 30456
+		"calls": 650,
+		"decisions": 186,
+		"searchDocuments": 30464
 	},
 	"kindCounts": {
-		"call": 648,
+		"call": 650,
 		"devnet": 12,
 		"proposal": 921,
 		"thread": 26600,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260521T081719Z-3497374ef8f4",
-		"generated_at": "2026-05-21T08:17:19.808Z",
-		"catalog_path": "/snapshots/20260521T081719Z-3497374ef8f4/catalog.json",
-		"record_count": 28611
+		"snapshot_id": "20260521T084341Z-bdf98b2afe4a",
+		"generated_at": "2026-05-21T08:43:41.516Z",
+		"catalog_path": "/snapshots/20260521T084341Z-bdf98b2afe4a/catalog.json",
+		"record_count": 28613
 	},
 	"eips": [
 		{
@@ -6565,6 +6565,24 @@
 			"title": "PM Lean Fixture Live Cycle 6: SFI movement watch",
 			"canonical_json_url": "/latest/calls/fixture-acde/900006.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900006.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900007",
+			"series": "fixture-acde",
+			"number": 900007,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 7: Glamsterdam BAL status",
+			"canonical_json_url": "/latest/calls/fixture-acde/900007.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900007.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900008",
+			"series": "fixture-acde",
+			"number": 900008,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 8: EIP-7702 wallet impact",
+			"canonical_json_url": "/latest/calls/fixture-acde/900008.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900008.md"
 		},
 		{
 			"id": "allwalletdevs/2026.05.20-39",
