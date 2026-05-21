@@ -1,21 +1,21 @@
 {
-	"snapshotId": "20260521T040206Z-25c30371eb94",
+	"snapshotId": "20260521T041437Z-3658b0c15f79",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-dionysuzx.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
-	"updatedAt": "2026-05-21T04:03:42.956Z",
+	"updatedAt": "2026-05-21T04:16:28.926Z",
 	"counts": {
 		"eips": 13,
-		"calls": 77,
-		"decisions": 135,
-		"searchDocuments": 225
+		"calls": 78,
+		"decisions": 136,
+		"searchDocuments": 227
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260521T040206Z-25c30371eb94",
-		"generated_at": "2026-05-21T04:02:06.312Z",
-		"catalog_path": "/snapshots/20260521T040206Z-25c30371eb94/catalog.json",
-		"record_count": 115,
+		"snapshot_id": "20260521T041437Z-3658b0c15f79",
+		"generated_at": "2026-05-21T04:14:37.760Z",
+		"catalog_path": "/snapshots/20260521T041437Z-3658b0c15f79/catalog.json",
+		"record_count": 116,
 		"read_models": [
 			"calls/acdc/174.json",
 			"calls/acdc/174.md",
@@ -83,6 +83,8 @@
 			"calls/fixture-acde/900002.md",
 			"calls/fixture-acde/900003.json",
 			"calls/fixture-acde/900003.md",
+			"calls/fixture-acde/900004.json",
+			"calls/fixture-acde/900004.md",
 			"calls/focil/29.json",
 			"calls/focil/29.md",
 			"calls/focil/30.json",
@@ -585,6 +587,43 @@
 					"url": "/records/call/fixture-acde/2026.05.21-900003/manifest.json",
 					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
 					"snippet": "PM Lean Fixture Live Cycle 3: SFI movement watch"
+				}
+			]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900004",
+			"series": "fixture-acde",
+			"number": 900004,
+			"date": "2026-05-21",
+			"title": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+			"summary": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":4,\"topic\":\"Glamsterdam BAL status\",\"eip\":\"EIP-7928\",\"summary\":\"Execution clients need one more cross-client fixture pass before the next devnet.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"BAL fixture cycle accepted the latest block-access-list readiness note.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM c",
+			"decisions": [
+				{
+					"id": "fixture-acde/2026.05.21-900004#decision-1",
+					"record_id": "fixture-acde/2026.05.21-900004",
+					"title": "BAL fixture cycle accepted the latest block-access-list readiness note.",
+					"decided_at": "00:00:14",
+					"canonical_url": "/latest/decisions/index.ndjson",
+					"citations": [
+						{
+							"recordId": "fixture-acde/2026.05.21-900004",
+							"artifactPath": "derived/call-intelligence.json",
+							"url": "/records/call/fixture-acde/2026.05.21-900004/derived/call-intelligence.json",
+							"label": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+							"snippet": "BAL fixture cycle accepted the latest block-access-list readiness note."
+						}
+					]
+				}
+			],
+			"canonical_json_url": "/latest/calls/fixture-acde/900004.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900004.md",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900004",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900004/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+					"snippet": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status"
 				}
 			]
 		},
@@ -5168,6 +5207,22 @@
 			]
 		},
 		{
+			"id": "fixture-acde/2026.05.21-900004#decision-1",
+			"record_id": "fixture-acde/2026.05.21-900004",
+			"title": "BAL fixture cycle accepted the latest block-access-list readiness note.",
+			"decided_at": "00:00:14",
+			"canonical_url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900004",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900004/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+					"snippet": "BAL fixture cycle accepted the latest block-access-list readiness note."
+				}
+			]
+		},
+		{
 			"id": "focil/2026.04.21-33#decision-1",
 			"record_id": "focil/2026.04.21-33",
 			"title": "FOCIL devnets will be based on glamsterdam-devnet-0 specifications",
@@ -6671,6 +6726,23 @@
 					"url": "/records/call/fixture-acde/2026.05.21-900003/manifest.json",
 					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
 					"snippet": "PM Lean Fixture Live Cycle 3: SFI movement watch"
+				}
+			],
+			"tags": ["call"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900004",
+			"kind": "call",
+			"title": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+			"body": "{\"schemaVersion\":1,\"source\":\"fixture-live\",\"fixtureLive\":true,\"cycle\":4,\"topic\":\"Glamsterdam BAL status\",\"eip\":\"EIP-7928\",\"summary\":\"Execution clients need one more cross-client fixture pass before the next devnet.\",\"decisions\":[{\"timestamp\":\"00:00:14\",\"decision\":\"BAL fixture cycle accepted the latest block-access-list readiness note.\"}],\"replacementNote\":\"Replace source=fixture-live with source=pm once upstream PM c BAL fixture cycle accepted the latest block-access-list readiness note.",
+			"url": "/latest/calls/fixture-acde/900004.json",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900004",
+					"artifactPath": "manifest.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900004/manifest.json",
+					"label": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+					"snippet": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status"
 				}
 			],
 			"tags": ["call"]
@@ -8915,6 +8987,23 @@
 					"url": "/records/call/fixture-acde/2026.05.21-900003/derived/call-intelligence.json",
 					"label": "PM Lean Fixture Live Cycle 3: SFI movement watch",
 					"snippet": "SFI watchlist fixture advanced a candidate replacement discussion."
+				}
+			],
+			"tags": ["decision"]
+		},
+		{
+			"id": "fixture-acde/2026.05.21-900004#decision-1",
+			"kind": "decision",
+			"title": "BAL fixture cycle accepted the latest block-access-list readiness note.",
+			"body": "BAL fixture cycle accepted the latest block-access-list readiness note.",
+			"url": "/latest/decisions/index.ndjson",
+			"citations": [
+				{
+					"recordId": "fixture-acde/2026.05.21-900004",
+					"artifactPath": "derived/call-intelligence.json",
+					"url": "/records/call/fixture-acde/2026.05.21-900004/derived/call-intelligence.json",
+					"label": "PM Lean Fixture Live Cycle 4: Glamsterdam BAL status",
+					"snippet": "BAL fixture cycle accepted the latest block-access-list readiness note."
 				}
 			],
 			"tags": ["decision"]
