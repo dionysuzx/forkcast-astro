@@ -36,20 +36,39 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Sync pinned snapshot
-        run: pnpm data:forkcast-snapshot -- --latest-root "${FORKCAST_DATA_LATEST_ROOT}" --data-base-url "${FORKCAST_DATA_BASE_URL}"
+      - name: Check remote snapshot
+        id: snapshot
         env:
-          FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT || '../forkcast-data/dist/latest' }}
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data.netlify.app' }}
-      - run: pnpm verify
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
+          FORCE_REBUILD: ${{ inputs.force_rebuild || false }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          remote_id=$(node --input-type=module -e "const r=await fetch(process.env.FORKCAST_DATA_BASE_URL.replace(/\/$/, '') + '/latest/manifest.json'); if(!r.ok) throw new Error(String(r.status)); const j=await r.json(); console.log(j.snapshot_id)")
+          current_id=$(node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync('forkcast-data.snapshot.json', 'utf8')).snapshotId)")
+          should_rebuild=false
+          if [ "$remote_id" != "$current_id" ] || [ "$FORCE_REBUILD" = "true" ] || [ "$EVENT_NAME" = "repository_dispatch" ]; then
+            should_rebuild=true
+          fi
+          echo "remote_id=$remote_id" >> "$GITHUB_OUTPUT"
+          echo "should_rebuild=$should_rebuild" >> "$GITHUB_OUTPUT"
+      - name: Sync pinned snapshot
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
+        run: |
+          latest_root="${FORKCAST_DATA_LATEST_ROOT:-${FORKCAST_DATA_BASE_URL%/}/latest}"
+          pnpm data:forkcast-snapshot -- --latest-root "$latest_root" --data-base-url "$FORKCAST_DATA_BASE_URL"
+        env:
+          FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
+      - if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
+        run: pnpm verify
       - name: Deploy preview
-        if: ${{ inputs.deploy_target != 'prod' }}
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && inputs.deploy_target != 'prod' }}
         run: npx netlify deploy --dir=dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - name: Deploy production
-        if: ${{ inputs.deploy_target == 'prod' }}
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && inputs.deploy_target == 'prod' }}
         run: npx netlify deploy --prod --dir=dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

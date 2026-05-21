@@ -14,12 +14,26 @@ const latestRoot =
 const dataBaseUrl =
 	arg("data-base-url", process.env.FORKCAST_DATA_BASE_URL) ??
 	"http://localhost:8888";
+const isRemoteLatestRoot = /^https?:\/\//.test(latestRoot);
+const latestBaseUrl = latestRoot.replace(/\/$/, "");
 
-const readJson = async (file) =>
-	JSON.parse(await readFile(path.join(latestRoot, file), "utf8"));
+const readRemoteText = async (file) => {
+	const response = await fetch(`${latestBaseUrl}/${file}`);
+	if (!response.ok) {
+		throw new Error(`Failed to fetch ${file}: ${response.status}`);
+	}
+	return response.text();
+};
+
+const readText = async (file) =>
+	isRemoteLatestRoot
+		? readRemoteText(file)
+		: readFile(path.join(latestRoot, file), "utf8");
+
+const readJson = async (file) => JSON.parse(await readText(file));
 
 const readNdjson = async (file) =>
-	(await readFile(path.join(latestRoot, file), "utf8"))
+	(await readText(file))
 		.split("\n")
 		.filter(Boolean)
 		.map((line) => JSON.parse(line));
