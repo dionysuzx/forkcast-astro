@@ -19,8 +19,22 @@ assert.equal(
 assert.ok(snapshot.counts.eips > 0, "snapshot must include EIPs");
 assert.ok(snapshot.counts.calls > 0, "snapshot must include calls");
 assert.ok(
+	snapshot.counts.records >= snapshot.counts.eips,
+	"record count must be retained",
+);
+assert.ok(
 	snapshot.eips.every((eip) => eip.canonical_url?.startsWith("/latest/eips/")),
 	"EIPs must carry canonical data URLs",
+);
+assert.equal(
+	snapshot.search,
+	undefined,
+	"Astro must not commit the full forkcast-data search corpus",
+);
+assert.equal(
+	snapshot.decisions,
+	undefined,
+	"Astro must not commit source-close decision text from forkcast-data",
 );
 
 console.log(`Pinned forkcast-data snapshot ${pin.snapshotId}`);

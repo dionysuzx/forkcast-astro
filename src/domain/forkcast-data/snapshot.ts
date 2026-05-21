@@ -12,10 +12,10 @@ export interface ForkcastDataEip {
 	id: number;
 	title: string;
 	status: string;
-	summary: string;
 	canonical_url: string;
 	markdown_url: string;
-	citations: ForkcastDataCitation[];
+	summary?: string;
+	citations?: ForkcastDataCitation[];
 }
 
 export interface ForkcastDataCall {
@@ -24,10 +24,10 @@ export interface ForkcastDataCall {
 	number: number;
 	date: string;
 	title: string;
-	summary: string;
 	canonical_json_url: string;
 	canonical_markdown_url: string;
-	citations: ForkcastDataCitation[];
+	summary?: string;
+	citations?: ForkcastDataCitation[];
 }
 
 export const forkcastDataSnapshot = snapshot;

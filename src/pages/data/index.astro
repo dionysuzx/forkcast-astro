@@ -11,6 +11,15 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 const eips = forkcastDataSnapshot.eips as ForkcastDataEip[];
 const calls = forkcastDataSnapshot.calls as ForkcastDataCall[];
 const snapshotId = forkcastDataSnapshot.snapshotId;
+const kindCounts = forkcastDataSnapshot.kindCounts ?? {};
+const stats = [
+	["Records", forkcastDataSnapshot.counts.records ?? 0],
+	["EIP read models", forkcastDataSnapshot.counts.eips],
+	["Call read models", forkcastDataSnapshot.counts.calls],
+	["Threads", kindCounts.thread ?? 0],
+	["Topics", kindCounts.topic ?? 0],
+	["Search docs", forkcastDataSnapshot.counts.searchDocuments],
+];
 ---
 
 <BaseLayout title="Forkcast Data Snapshot" description="Pinned canonical data snapshot used by Forkcast.">
@@ -35,19 +44,13 @@ const snapshotId = forkcastDataSnapshot.snapshotId;
         </div>
       </header>
 
-      <section class="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <div class="text-2xl font-semibold">{forkcastDataSnapshot.counts.eips}</div>
-          <div class="text-sm text-slate-600 dark:text-slate-400">EIP read models</div>
-        </div>
-        <div class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <div class="text-2xl font-semibold">{forkcastDataSnapshot.counts.calls}</div>
-          <div class="text-sm text-slate-600 dark:text-slate-400">Call read models</div>
-        </div>
-        <div class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-          <div class="text-2xl font-semibold">{forkcastDataSnapshot.counts.decisions}</div>
-          <div class="text-sm text-slate-600 dark:text-slate-400">Decision records</div>
-        </div>
+      <section class="grid grid-cols-2 gap-4 md:grid-cols-3">
+        {stats.map(([label, value]) => (
+          <div class="rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
+            <div class="text-2xl font-semibold">{Number(value).toLocaleString("en-US")}</div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">{label}</div>
+          </div>
+        ))}
       </section>
 
       <section class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">

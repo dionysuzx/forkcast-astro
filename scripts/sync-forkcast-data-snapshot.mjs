@@ -39,10 +39,42 @@ const readNdjson = async (file) =>
 		.map((line) => JSON.parse(line));
 
 const manifest = await readJson("manifest.json");
+const catalog = await readJson("catalog.json").catch(() => ({ records: [] }));
 const eips = await readJson("eips/index.json").catch(() => []);
 const calls = await readJson("calls/index.json").catch(() => []);
 const decisions = await readNdjson("decisions/index.ndjson").catch(() => []);
 const search = await readJson("search/index.json").catch(() => []);
+const kindCounts = (catalog.records ?? []).reduce((counts, record) => {
+	const kind = record.kind ?? "unknown";
+	counts[kind] = (counts[kind] ?? 0) + 1;
+	return counts;
+}, {});
+
+const publicManifest = {
+	version: manifest.version,
+	snapshot_id: manifest.snapshot_id,
+	generated_at: manifest.generated_at,
+	catalog_path: manifest.catalog_path,
+	record_count: manifest.record_count,
+};
+
+const publicEips = eips.map((eip) => ({
+	id: eip.id,
+	title: eip.title,
+	status: eip.status,
+	canonical_url: eip.canonical_url,
+	markdown_url: eip.markdown_url,
+}));
+
+const publicCalls = calls.map((call) => ({
+	id: call.id,
+	series: call.series,
+	number: call.number,
+	date: call.date,
+	title: call.title,
+	canonical_json_url: call.canonical_json_url,
+	canonical_markdown_url: call.canonical_markdown_url,
+}));
 
 const snapshot = {
 	snapshotId: manifest.snapshot_id,
@@ -51,16 +83,16 @@ const snapshot = {
 	dataBaseUrl,
 	updatedAt: new Date().toISOString(),
 	counts: {
+		records: manifest.record_count,
 		eips: eips.length,
 		calls: calls.length,
 		decisions: decisions.length,
 		searchDocuments: search.length,
 	},
-	manifest,
-	eips,
-	calls,
-	decisions,
-	search,
+	kindCounts,
+	manifest: publicManifest,
+	eips: publicEips,
+	calls: publicCalls,
 };
 
 await mkdir("src/domain/forkcast-data", { recursive: true });
