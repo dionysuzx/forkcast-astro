@@ -1,9 +1,9 @@
 {
-	"snapshotId": "20260521T184434Z-58fc2a2fae23",
+	"snapshotId": "20260521T190719Z-85dcd56debcd",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-21T18:51:53.303Z",
+	"updatedAt": "2026-05-21T19:13:50.190Z",
 	"counts": {
 		"records": 28653,
 		"eips": 921,
@@ -21,9 +21,9 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260521T184434Z-58fc2a2fae23",
-		"generated_at": "2026-05-21T18:44:34.814Z",
-		"catalog_path": "/snapshots/20260521T184434Z-58fc2a2fae23/catalog.json",
+		"snapshot_id": "20260521T190719Z-85dcd56debcd",
+		"generated_at": "2026-05-21T19:07:19.152Z",
+		"catalog_path": "/snapshots/20260521T190719Z-85dcd56debcd/catalog.json",
 		"record_count": 28653
 	},
 	"eips": [
@@ -6469,7 +6469,7 @@
 		},
 		{
 			"id": 8253,
-			"title": "EIP-8253: Upgrade pre-Spurious-Dragon accounts",
+			"title": "EIP-8253: Bump nonce of zero-nonce storage accounts",
 			"status": "Draft",
 			"canonical_url": "/latest/eips/8253.json",
 			"markdown_url": "/latest/eips/8253.md"
