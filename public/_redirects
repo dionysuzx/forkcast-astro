@@ -1,0 +1,2 @@
+# Serve index.html for all routes to enable SPA routing
+/* /index.html 200

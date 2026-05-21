@@ -1,0 +1,392 @@
+---
+import { ChevronDown } from "@lucide/astro";
+import {
+	buildAgendaPlans,
+	type Priority,
+	type ScopeStatus,
+} from "@/domain/agenda/agenda-plan";
+import { layerBadgeClass, stageBadgeClass } from "@/domain/display";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const formatDate = (date: string): string =>
+	new Intl.DateTimeFormat("en-US", {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+		timeZone: "UTC",
+	}).format(new Date(`${date}T00:00:00Z`));
+
+const getCountdownText = (date: string): string => {
+	const today = new Date();
+	const target = new Date(`${date}T00:00:00Z`);
+	const todayUtc = Date.UTC(
+		today.getUTCFullYear(),
+		today.getUTCMonth(),
+		today.getUTCDate(),
+	);
+	const targetUtc = Date.UTC(
+		target.getUTCFullYear(),
+		target.getUTCMonth(),
+		target.getUTCDate(),
+	);
+	const days = Math.ceil((targetUtc - todayUtc) / 86_400_000);
+	if (days < 0) return "recently";
+	if (days === 0) return "today";
+	if (days === 1) return "tomorrow";
+	return `in ${days} days`;
+};
+
+const callHref = (callPath: string | null): string | null =>
+	callPath ? `/calls/${callPath}` : null;
+
+const priorityDotClass = (priority: Priority): string => {
+	switch (priority) {
+		case "high":
+			return "bg-red-400";
+		case "medium":
+			return "bg-amber-400";
+		case "low":
+			return "bg-slate-400";
+	}
+};
+
+const statusClass = (status: ScopeStatus): string => {
+	switch (status) {
+		case "Considered":
+			return stageBadgeClass("Considered for Inclusion");
+		case "Proposed":
+			return stageBadgeClass("Proposed for Inclusion");
+		case "Candidate":
+			return "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300";
+	}
+};
+
+const plans = buildAgendaPlans();
+const defaultPlan = plans.find((plan) => plan.type === "acde") ?? plans[0];
+---
+
+<BaseLayout title="Agenda Planner - Forkcast" description="Agenda planning for Ethereum AllCoreDevs facilitators.">
+  <div class="min-h-screen bg-slate-50 p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div class="mx-auto max-w-4xl">
+      <header class="mb-8">
+        <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">
+          <span class="font-normal opacity-80">Agenda Planner for</span>
+          <span id="agenda-series-picker" class="relative inline-block">
+            <button
+              type="button"
+              id="agenda-series-trigger"
+              class="inline-flex items-baseline gap-1 border-purple-300 border-b-2 font-bold text-purple-700 transition-colors hover:border-purple-400 dark:border-purple-600 dark:text-purple-300 dark:hover:border-purple-500"
+              aria-expanded="false"
+              aria-controls="agenda-series-menu"
+            >
+              <span id="agenda-selected-label">ACDE</span>
+              <ChevronDown id="agenda-series-chevron" class="h-3.5 w-3.5 transition-transform" aria-hidden="true" />
+            </button>
+            <nav id="agenda-series-menu" class="absolute top-full left-0 z-10 mt-1 hidden min-w-40 rounded border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800" aria-label="Agenda series">
+              <a href="/agenda?series=all" class="agenda-series-link block px-4 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700" data-agenda-series-link="" data-agenda-series-label="All" data-agenda-series-description="Planning context from recent AllCoreDevs calls.">
+                All
+              </a>
+              {plans.map((plan) => (
+                <a href={`/agenda?series=${plan.type}`} class="agenda-series-link block px-4 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700" data-agenda-series-link={plan.type} data-agenda-series-label={plan.label} data-agenda-series-description={`Planning context from recent ${plan.seriesName} calls.`}>
+                  {plan.label}
+                </a>
+              ))}
+            </nav>
+          </span>
+        </h1>
+        <p id="agenda-selected-description" class="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-400">
+          Planning context from recent {defaultPlan.seriesName} calls.
+        </p>
+      </header>
+
+      <div class="space-y-8">
+        {plans.map((plan) => {
+          const suggestions = plan.agendaSuggestions?.suggestions ?? [];
+          const openItems = plan.openActions?.open_items ?? [];
+          const resolvedItems = plan.openActions?.resolved_items ?? [];
+          const deferred = plan.deferredDecisions?.deferred ?? [];
+          const pendingDeferred = deferred.filter((item) => !item.revisited);
+          const revisitedDeferred = deferred.filter((item) => item.revisited);
+
+          return (
+            <section id={plan.type} class="agenda-series-section scroll-mt-24" data-agenda-series-section={plan.type}>
+              <div class="agenda-series-heading mb-4 rounded-lg border border-slate-200 bg-white px-5 py-4 dark:border-slate-700 dark:bg-slate-800">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h2 class="font-mono text-sm font-semibold uppercase text-purple-600 dark:text-purple-400">{plan.label}</h2>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{plan.seriesName}</p>
+                  </div>
+                  <div class="flex flex-wrap gap-2 text-xs">
+                    <span class="rounded bg-purple-100 px-2 py-1 font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">{suggestions.length} topics</span>
+                    <span class="rounded bg-amber-100 px-2 py-1 font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">{openItems.length} open actions</span>
+                    <span class="rounded bg-slate-100 px-2 py-1 font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">{pendingDeferred.length} deferred</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                {plan.upcomingCall && (
+                  <aside class="rounded-lg border border-purple-200 bg-purple-50/50 p-4 dark:border-purple-800/50 dark:bg-purple-900/10">
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 class="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                          Next: {plan.seriesName} #{plan.upcomingCall.number}
+                        </h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">
+                          {formatDate(plan.upcomingCall.date)}
+                          <span class="ml-2 font-medium text-purple-600 dark:text-purple-400">{getCountdownText(plan.upcomingCall.date)}</span>
+                        </p>
+                      </div>
+                      <div class="flex shrink-0 items-center gap-3">
+                        <a href={plan.upcomingCall.githubUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-700 text-xs transition-colors hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50">
+                          <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+                          </svg>
+                          Agenda #{plan.upcomingCall.issueNumber}
+                        </a>
+                        {plan.upcomingCall.youtubeUrl && (
+                          <a href={plan.upcomingCall.youtubeUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 font-medium text-red-700 text-xs transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50">
+                            <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
+                            YouTube
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </aside>
+                )}
+
+                {suggestions.length > 0 && (
+                  <details open class="rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+                    <summary class="flex cursor-pointer list-none items-center gap-2.5 px-4 py-3 text-sm font-semibold text-slate-900 marker:hidden dark:text-slate-100 [&::-webkit-details-marker]:hidden">
+                      <span class="text-slate-400 text-xs" aria-hidden="true">⌄</span>
+                      <span class="text-xs uppercase tracking-wide">Suggested Agenda</span>
+                      {plan.agendaSuggestions?.for_call && <span class="ml-2 font-normal text-purple-600 text-xs dark:text-purple-400">for {plan.agendaSuggestions.for_call}</span>}
+                      <span class="font-normal text-slate-500 text-xs dark:text-slate-400">{suggestions.length} topics</span>
+                    </summary>
+                    <div class="space-y-3 border-slate-200 border-t p-4 dark:border-slate-700">
+                      {suggestions.map((suggestion) => (
+                        <article class="flex gap-3 text-sm">
+                          <span class={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${priorityDotClass(suggestion.priority)}`} title={`${suggestion.priority} priority`}></span>
+                          <div class="min-w-0">
+                            <h3 class="font-normal text-slate-900 dark:text-slate-100">{suggestion.topic}</h3>
+                            <p class="mt-1 text-slate-600 text-xs leading-relaxed dark:text-slate-400">{suggestion.rationale}</p>
+                            {suggestion.related_eips.length > 0 && (
+                              <div class="mt-2 flex flex-wrap gap-1.5">
+                                {suggestion.related_eips.map((id) => (
+                                  <a href={`/eips/${id}`} data-astro-prefetch class="rounded bg-white px-2 py-0.5 font-mono text-purple-600 text-xs ring-1 ring-slate-200 dark:bg-slate-800 dark:text-purple-400 dark:ring-slate-700">EIP-{id}</a>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </article>
+                      ))}
+                      {plan.agendaSuggestions?.generated && <p class="border-slate-200 border-t pt-3 text-slate-400 text-xs dark:border-slate-700">Generated {plan.agendaSuggestions.generated}</p>}
+                    </div>
+                  </details>
+                )}
+
+                {plan.scopeGroups.length > 0 && (
+                  <details open class="rounded border border-slate-200 bg-slate-50/60 dark:border-slate-700 dark:bg-slate-900/20">
+                    <summary class="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Upgrade Scope</summary>
+                    <div class="space-y-5 border-slate-200 border-t p-4 dark:border-slate-700">
+                      {plan.scopeGroups.map((group) => (
+                        <div>
+                          <h3 class="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{group.forkName}</h3>
+                          <div class="space-y-2">
+                            {group.items.map((item) => (
+                              <article class="rounded border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
+                                <div class="flex flex-wrap items-start gap-2">
+                                  <a href={item.href} class="font-mono text-purple-600 text-sm hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">{typeof item.id === "number" ? `EIP-${item.id}` : item.title}</a>
+                                  <span class={`rounded px-2 py-0.5 text-xs ${statusClass(item.status)}`}>{item.status}</span>
+                                  {item.layer && <span class={`rounded px-1.5 py-0.5 text-[10px] ${layerBadgeClass(item.layer)}`}>{item.layer}</span>}
+                                  {item.lastDiscussedDate && (
+                                    callHref(item.lastDiscussedCall) ? (
+                                      <a href={callHref(item.lastDiscussedCall) ?? undefined} class="ml-auto text-slate-500 text-xs hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400">{formatDate(item.lastDiscussedDate)}</a>
+                                    ) : (
+                                      <span class="ml-auto text-slate-500 text-xs dark:text-slate-400">{formatDate(item.lastDiscussedDate)}</span>
+                                    )
+                                  )}
+                                </div>
+                                {typeof item.id === "number" && <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">{item.title}</p>}
+                                {item.thread && (item.thread.current_state || item.thread.open_questions.length > 0 || item.thread.thread.length > 0) && (
+                                  <details class="mt-2">
+                                    <summary class="cursor-pointer text-slate-500 text-xs hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300">Discussion thread</summary>
+                                    <div class="mt-2 space-y-2 border-slate-200 border-l-2 pl-3 text-xs dark:border-slate-700">
+                                      {item.thread.thread.slice(0, 3).map((entry) => (
+                                        <p class="text-slate-500 dark:text-slate-400"><span class="font-medium text-slate-700 dark:text-slate-300">{entry.call}</span>: {entry.summary}</p>
+                                      ))}
+                                      {item.thread.current_state && <p class="text-slate-700 dark:text-slate-300"><span class="font-medium">Current:</span> {item.thread.current_state}</p>}
+                                      {item.thread.open_questions.length > 0 && <p class="text-amber-700 dark:text-amber-400"><span class="font-medium">Open:</span> {item.thread.open_questions.join(" | ")}</p>}
+                                    </div>
+                                  </details>
+                                )}
+                              </article>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+
+                {openItems.length > 0 && (
+                  <details class="rounded border border-slate-200 bg-slate-50/60 dark:border-slate-700 dark:bg-slate-900/20">
+                    <summary class="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Open Action Items <span class="ml-2 font-normal text-amber-600 text-xs dark:text-amber-400">{openItems.length} open</span></summary>
+                    <div class="space-y-3 border-slate-200 border-t p-4 dark:border-slate-700">
+                      {openItems.map((item) => (
+                        <article class="text-sm">
+                          <div class="flex flex-wrap items-center gap-2">
+                            <span class="rounded bg-slate-100 px-2 py-0.5 font-medium text-slate-700 text-xs dark:bg-slate-700 dark:text-slate-300">{item.owner}</span>
+                            <span class="text-slate-900 dark:text-slate-100">{item.action}</span>
+                          </div>
+                          <p class="mt-1 text-slate-500 text-xs dark:text-slate-400">From {item.source_call} on {formatDate(item.source_date)}{item.notes ? ` - ${item.notes}` : ""}</p>
+                        </article>
+                      ))}
+                      {resolvedItems.length > 0 && (
+                        <details class="border-slate-200 border-t pt-3 dark:border-slate-700">
+                          <summary class="cursor-pointer text-slate-500 text-xs dark:text-slate-400">{resolvedItems.length} resolved items</summary>
+                          <div class="mt-2 space-y-2">
+                            {resolvedItems.slice(0, 5).map((item) => (
+                              <p class="text-slate-500 text-xs dark:text-slate-400"><span class="font-medium text-slate-600 dark:text-slate-300">{item.resolved_in}</span>: {item.resolution}</p>
+                            ))}
+                          </div>
+                        </details>
+                      )}
+                      {plan.openActions?.generated && <p class="border-slate-200 border-t pt-3 text-slate-400 text-xs dark:border-slate-700">Generated {plan.openActions.generated}</p>}
+                    </div>
+                  </details>
+                )}
+
+                {deferred.length > 0 && (
+                  <details class="rounded border border-slate-200 bg-slate-50/60 dark:border-slate-700 dark:bg-slate-900/20">
+                    <summary class="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Deferred Decisions <span class="ml-2 font-normal text-amber-600 text-xs dark:text-amber-400">{pendingDeferred.length} pending</span></summary>
+                    <div class="space-y-3 border-slate-200 border-t p-4 dark:border-slate-700">
+                      {pendingDeferred.map((item) => (
+                        <article class="text-sm">
+                          <h3 class="font-medium text-slate-900 dark:text-slate-100">{item.topic}</h3>
+                          <p class="mt-1 text-slate-500 text-xs dark:text-slate-400">Deferred in {item.deferred_in}{item.expected_revisit ? ` - expected: ${item.expected_revisit}` : ""}</p>
+                        </article>
+                      ))}
+                      {revisitedDeferred.length > 0 && (
+                        <details class="border-slate-200 border-t pt-3 dark:border-slate-700">
+                          <summary class="cursor-pointer text-slate-500 text-xs dark:text-slate-400">{revisitedDeferred.length} revisited</summary>
+                          <div class="mt-2 space-y-2">
+                            {revisitedDeferred.map((item) => (
+                              <p class="text-slate-500 text-xs dark:text-slate-400"><span class="font-medium text-slate-700 dark:text-slate-300">{item.topic}</span>: {item.outcome ?? `${item.deferred_in} to ${item.revisited_in}`}</p>
+                            ))}
+                          </div>
+                        </details>
+                      )}
+                      {plan.deferredDecisions?.generated && <p class="border-slate-200 border-t pt-3 text-slate-400 text-xs dark:border-slate-700">Generated {plan.deferredDecisions.generated}</p>}
+                    </div>
+                  </details>
+                )}
+
+                {plan.recentCalls.length > 0 && (
+                  <details class="rounded border border-slate-200 bg-slate-50/60 dark:border-slate-700 dark:bg-slate-900/20">
+                    <summary class="cursor-pointer px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">Recent Calls <span class="ml-2 font-normal text-slate-500 text-xs dark:text-slate-400">{plan.recentCalls.length} calls</span></summary>
+                    <div class="divide-y divide-slate-200 border-slate-200 border-t dark:divide-slate-700 dark:border-slate-700">
+                      {plan.recentCalls.map((summary) => (
+                        <article class="p-4">
+                          <div class="flex flex-wrap items-center gap-2">
+                            <a href={`/calls/${summary.call.path}`} data-astro-prefetch class="font-medium text-purple-600 text-sm hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">{plan.label} #{Number.parseInt(summary.call.number, 10)}</a>
+                            <span class="text-slate-400 text-xs dark:text-slate-500">{formatDate(summary.call.date)}</span>
+                            <span class="ml-auto text-slate-500 text-xs dark:text-slate-400">{summary.decisionCount} decisions | {summary.actionCount} actions | {summary.targetCount} targets</span>
+                          </div>
+                          {summary.tldr.action_items && summary.tldr.action_items.length > 0 && (
+                            <ul class="mt-2 space-y-1">
+                              {summary.tldr.action_items.slice(0, 3).map((item) => (
+                                <li class="text-slate-600 text-xs dark:text-slate-400"><span class="font-medium text-slate-700 dark:text-slate-300">{item.owner}</span>: {item.action}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  </details>
+                )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const validAgendaSeries = new Set(["acde", "acdc", "acdt"]);
+    const seriesLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>(".agenda-series-link"));
+    const seriesSections = Array.from(document.querySelectorAll<HTMLElement>(".agenda-series-section"));
+    const seriesTrigger = document.getElementById("agenda-series-trigger");
+    const seriesMenu = document.getElementById("agenda-series-menu");
+    const seriesChevron = document.getElementById("agenda-series-chevron");
+    const selectedLabel = document.getElementById("agenda-selected-label");
+    const selectedDescription = document.getElementById("agenda-selected-description");
+    const activeClasses = ["bg-purple-100", "text-purple-700", "dark:bg-purple-900/30", "dark:text-purple-300"];
+    const inactiveClasses = ["text-slate-700", "dark:text-slate-300"];
+
+    const selectedAgendaSeries = () => {
+      const series = new URLSearchParams(window.location.search).get("series");
+      if (series === "all") return "";
+      return series && validAgendaSeries.has(series) ? series : "acde";
+    };
+
+    const toggleClassSet = (element: HTMLElement, classes: string[], enabled: boolean) => {
+      for (const className of classes) element.classList.toggle(className, enabled);
+    };
+
+    const setSeriesMenuOpen = (open: boolean) => {
+      seriesMenu?.classList.toggle("hidden", !open);
+      seriesTrigger?.setAttribute("aria-expanded", String(open));
+      seriesChevron?.classList.toggle("rotate-180", open);
+    };
+
+    const applyAgendaSeries = () => {
+      const selected = selectedAgendaSeries();
+      const activeLink = seriesLinks.find((link) => (link.dataset.agendaSeriesLink ?? "") === selected);
+      if (selectedLabel) selectedLabel.textContent = activeLink?.dataset.agendaSeriesLabel ?? "ACDE";
+      if (selectedDescription) selectedDescription.textContent = activeLink?.dataset.agendaSeriesDescription ?? "Planning context from recent AllCoreDevs - Execution calls.";
+      for (const section of seriesSections) {
+        section.hidden = Boolean(selected) && section.dataset.agendaSeriesSection !== selected;
+        const heading = section.querySelector<HTMLElement>(".agenda-series-heading");
+        if (heading) heading.hidden = Boolean(selected);
+      }
+      for (const link of seriesLinks) {
+        const active = (link.dataset.agendaSeriesLink ?? "") === selected;
+        toggleClassSet(link, activeClasses, active);
+        toggleClassSet(link, inactiveClasses, !active);
+        link.setAttribute("aria-current", active ? "page" : "false");
+      }
+    };
+
+    for (const link of seriesLinks) {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const selected = link.dataset.agendaSeriesLink ?? "";
+        const url = selected ? `/agenda?series=${selected}` : "/agenda?series=all";
+        window.history.pushState({}, "", url);
+        applyAgendaSeries();
+        setSeriesMenuOpen(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    seriesTrigger?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setSeriesMenuOpen(seriesMenu?.classList.contains("hidden") ?? true);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (event.target instanceof Node && !seriesMenu?.contains(event.target) && !seriesTrigger?.contains(event.target)) setSeriesMenuOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setSeriesMenuOpen(false);
+    });
+
+    window.addEventListener("popstate", applyAgendaSeries);
+    applyAgendaSeries();
+  </script>
+</BaseLayout>

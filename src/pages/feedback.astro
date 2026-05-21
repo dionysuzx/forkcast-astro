@@ -1,0 +1,11 @@
+---
+import RedirectPage from "@/components/site/RedirectPage.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const feedbackUrl =
+	"https://ethereum-magicians.org/t/community-feedback-on-non-headlining-features-in-glamsterdam/26410";
+---
+
+<BaseLayout title="Feedback Redirect - Forkcast" description="Redirecting to the feedback forum thread.">
+  <RedirectPage to={feedbackUrl} label="the forum" />
+</BaseLayout>

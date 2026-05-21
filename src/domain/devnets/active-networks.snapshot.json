@@ -1,0 +1,14 @@
+{
+	"source": "https://ethpandaops-platform-production-cartographoor.ams3.digitaloceanspaces.com/networks.json",
+	"retrievedAt": "2026-05-09",
+	"activeNetworkIds": [
+		"bal-devnet-3",
+		"bal-devnet-6",
+		"blob-devnet-0",
+		"glamsterdam-devnet-3",
+		"hoodi",
+		"mainnet",
+		"perf-devnet-3",
+		"sepolia"
+	]
+}

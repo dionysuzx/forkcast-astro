@@ -1,0 +1,283 @@
+---
+import SiteHeader from "@/components/site/SiteHeader.astro";
+import "@/styles/global.css";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+	title?: string;
+	description?: string;
+	wide?: boolean;
+	showCallSearch?: boolean;
+}
+
+const {
+	title = "Forkcast - Ethereum Upgrade Tracker",
+	description = "See what's on the horizon and how it impacts you. Track Ethereum network upgrades and explore how changes affect users, developers, and the ecosystem.",
+	wide = false,
+	showCallSearch = false,
+} = Astro.props;
+
+const canonicalUrl = new URL(
+	Astro.url.pathname,
+	"https://forkcast.org",
+).toString();
+---
+
+<!doctype html>
+<html lang="en" transition:name="root" transition:animate="none">
+  <head>
+    <script is:inline>
+      const applyStoredTheme = (root) => {
+        try {
+          const theme = localStorage.getItem("theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          const useDark = theme === "dark" || (theme !== "light" && prefersDark);
+          root.classList.toggle("dark", useDark);
+          root.style.colorScheme = useDark ? "dark" : "light";
+        } catch {
+          // Keep the server-rendered theme when storage or media queries are unavailable.
+        }
+      };
+
+      applyStoredTheme(document.documentElement);
+
+      document.addEventListener("astro:before-swap", (event) => {
+        if ("newDocument" in event) {
+          applyStoredTheme(event.newDocument.documentElement);
+        }
+      });
+      document.addEventListener("astro:after-swap", () => {
+        applyStoredTheme(document.documentElement);
+      });
+
+      try {
+        if (localStorage.getItem("epf7-banner-dismissed") === "true") {
+          document.documentElement.dataset.announcementBannerDismissed = "true";
+        }
+      } catch {}
+    </script>
+    <style is:inline>
+      html[data-announcement-banner-dismissed="true"] #announcement-banner {
+        display: none;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/ethereum-icon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Forkcast" />
+    <meta property="og:image" content="https://forkcast.org/forkcast-metacard.png?v=2" />
+    <meta property="og:image:alt" content="Forkcast - Ethereum Upgrade Tracker" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://forkcast.org/forkcast-metacard.png?v=2" />
+    <meta name="twitter:image:alt" content="Forkcast - Ethereum Upgrade Tracker" />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div class="scanlines" aria-hidden="true"></div>
+    <SiteHeader wide={wide} showCallSearch={showCallSearch} />
+    <main>
+      <slot />
+    </main>
+    <script>
+      type EnhancedSelectState = {
+        select: HTMLSelectElement;
+        root: HTMLDivElement;
+        button: HTMLButtonElement;
+        valueLabel: HTMLSpanElement;
+        menu: HTMLDivElement;
+      };
+
+      const enhancedSelects = new WeakMap<HTMLSelectElement, EnhancedSelectState>();
+      const openSelects = new Set<EnhancedSelectState>();
+
+      const closeEnhancedSelect = (state: EnhancedSelectState) => {
+        state.root.dataset.open = "false";
+        state.button.setAttribute("aria-expanded", "false");
+        state.menu.hidden = true;
+        openSelects.delete(state);
+      };
+
+      const closeOtherEnhancedSelects = (except?: EnhancedSelectState) => {
+        for (const state of Array.from(openSelects)) {
+          if (state !== except) closeEnhancedSelect(state);
+        }
+      };
+
+      const renderEnhancedSelect = (state: EnhancedSelectState) => {
+        const selectedOption = state.select.selectedOptions[0] ?? state.select.options[0];
+        state.valueLabel.textContent = selectedOption?.textContent ?? "";
+        state.menu.replaceChildren();
+
+        for (const option of Array.from(state.select.options)) {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = "forkcast-select-option";
+          item.dataset.value = option.value;
+          item.dataset.selected = String(option.value === state.select.value);
+          item.setAttribute("role", "option");
+          item.setAttribute("aria-selected", String(option.value === state.select.value));
+          item.disabled = option.disabled;
+
+          const label = document.createElement("span");
+          label.textContent = option.textContent ?? "";
+          item.append(label);
+
+          if (option.value === state.select.value) {
+            const check = document.createElement("span");
+            check.className = "forkcast-select-check";
+            check.textContent = "✓";
+            item.append(check);
+          }
+
+          item.addEventListener("click", () => {
+            state.select.value = option.value;
+            state.select.dispatchEvent(new Event("input", { bubbles: true }));
+            state.select.dispatchEvent(new Event("change", { bubbles: true }));
+            renderEnhancedSelect(state);
+            closeEnhancedSelect(state);
+            state.button.focus();
+          });
+
+          state.menu.append(item);
+        }
+      };
+
+      const openEnhancedSelect = (state: EnhancedSelectState) => {
+        closeOtherEnhancedSelects(state);
+        renderEnhancedSelect(state);
+        state.root.dataset.open = "true";
+        state.button.setAttribute("aria-expanded", "true");
+        state.menu.hidden = false;
+        openSelects.add(state);
+      };
+
+      const enhanceSelect = (select: HTMLSelectElement) => {
+        if (enhancedSelects.has(select)) return;
+
+        const root = document.createElement("div");
+        root.className = "forkcast-select-control";
+        root.dataset.open = "false";
+        root.dataset.enhancedSelectRoot = "";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "forkcast-select-button";
+        button.dataset.enhancedSelectTrigger = "";
+        button.setAttribute("aria-haspopup", "listbox");
+        button.setAttribute("aria-expanded", "false");
+
+        const valueLabel = document.createElement("span");
+        valueLabel.className = "truncate";
+        button.append(valueLabel);
+        button.insertAdjacentHTML(
+          "beforeend",
+          '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>',
+        );
+
+        const menu = document.createElement("div");
+        menu.className = "forkcast-select-menu";
+        menu.dataset.enhancedSelectMenu = "";
+        menu.setAttribute("role", "listbox");
+        menu.hidden = true;
+
+        root.append(button, menu);
+        select.after(root);
+        select.classList.add("forkcast-native-select");
+        select.tabIndex = -1;
+        select.setAttribute("aria-hidden", "true");
+
+        const state = { select, root, button, valueLabel, menu };
+        enhancedSelects.set(select, state);
+
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          if (root.dataset.open === "true") closeEnhancedSelect(state);
+          else openEnhancedSelect(state);
+        });
+
+        button.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openEnhancedSelect(state);
+            menu.querySelector<HTMLButtonElement>(".forkcast-select-option")?.focus();
+          }
+        });
+
+        menu.addEventListener("keydown", (event) => {
+          const options = Array.from(menu.querySelectorAll<HTMLButtonElement>(".forkcast-select-option:not(:disabled)"));
+          const currentIndex = options.indexOf(document.activeElement as HTMLButtonElement);
+          if (event.key === "Escape") {
+            event.preventDefault();
+            closeEnhancedSelect(state);
+            button.focus();
+            return;
+          }
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            options[Math.min(currentIndex + 1, options.length - 1)]?.focus();
+            return;
+          }
+          if (event.key === "ArrowUp") {
+            event.preventDefault();
+            options[Math.max(currentIndex - 1, 0)]?.focus();
+          }
+        });
+
+        select.addEventListener("input", () => renderEnhancedSelect(state));
+        select.addEventListener("change", () => renderEnhancedSelect(state));
+        new MutationObserver(() => renderEnhancedSelect(state)).observe(select, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+
+        renderEnhancedSelect(state);
+      };
+
+      const enhanceSelects = () => {
+        document
+          .querySelectorAll<HTMLSelectElement>("select[data-enhance-select]")
+          .forEach(enhanceSelect);
+      };
+
+      let enhancedSelectObserver: MutationObserver | null = null;
+      const observeEnhancedSelects = () => {
+        enhancedSelectObserver?.disconnect();
+        enhancedSelectObserver = new MutationObserver(enhanceSelects);
+        enhancedSelectObserver.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      };
+
+      const initializeEnhancedSelects = () => {
+        enhanceSelects();
+        observeEnhancedSelects();
+      };
+
+      initializeEnhancedSelects();
+      document.addEventListener("astro:page-load", initializeEnhancedSelects);
+      document.addEventListener("astro:before-swap", () => closeOtherEnhancedSelects());
+      document.addEventListener("pointerdown", (event) => {
+        if (event.target instanceof Node) {
+          for (const state of Array.from(openSelects)) {
+            if (state.root.contains(event.target)) return;
+          }
+        }
+        closeOtherEnhancedSelects();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeOtherEnhancedSelects();
+      });
+    </script>
+  </body>
+</html>

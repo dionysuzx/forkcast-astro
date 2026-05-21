@@ -1,0 +1,86 @@
+{
+	"source": "https://github.com/ethereum/pm/issues?q=is%3Aissue+is%3Aopen",
+	"apiSource": "https://api.github.com/repos/ethereum/pm/issues?state=open&per_page=100",
+	"retrievedAt": "2026-05-10T18:25:42.546Z",
+	"calls": [
+		{
+			"type": "acdt",
+			"title": "All Core Devs - Testing (ACDT) #79, May 11, 2026",
+			"date": "2026-05-11",
+			"startTimeUtc": "2026-05-11T14:00:00Z",
+			"number": "079",
+			"githubUrl": "https://github.com/ethereum/pm/issues/2038",
+			"issueNumber": 2038,
+			"agendaItems": [
+				"Summary of interop event",
+				"glamsterdam devnet updates",
+				"spec glamsterdam next devnet",
+				"debug RPC update"
+			],
+			"createdAt": "2026-05-05T09:09:31Z",
+			"updatedAt": "2026-05-08T15:03:36Z",
+			"youtubeUrl": "https://youtube.com/watch?v=2MouT9NiGS8"
+		},
+		{
+			"type": "fcr",
+			"title": "Fast Confirmation Rule (FCR) #7, May 12, 2026",
+			"date": "2026-05-12",
+			"startTimeUtc": "2026-05-12T12:00:00Z",
+			"number": "007",
+			"githubUrl": "https://github.com/ethereum/pm/issues/2037",
+			"issueNumber": 2037,
+			"agendaItems": [
+				"Client Updates",
+				"Spec Updates",
+				"Research Updates",
+				"Testing Updates"
+			],
+			"createdAt": "2026-05-04T16:55:10Z",
+			"updatedAt": "2026-05-04T16:56:35Z",
+			"youtubeUrl": null
+		},
+		{
+			"type": "acdc",
+			"title": "All Core Devs - Consensus (ACDC) #178, May 14, 2026",
+			"date": "2026-05-14",
+			"startTimeUtc": "2026-05-14T14:00:00Z",
+			"number": "178",
+			"githubUrl": "https://github.com/ethereum/pm/issues/2028",
+			"issueNumber": 2028,
+			"agendaItems": ["glam", "hegotá"],
+			"createdAt": "2026-04-18T14:44:02Z",
+			"updatedAt": "2026-04-29T07:51:42Z",
+			"youtubeUrl": "https://youtube.com/watch?v=tZIY3IybQh4"
+		},
+		{
+			"type": "awd",
+			"title": "AllWalletDevs #39, May 20, 2026",
+			"date": "2026-05-20",
+			"startTimeUtc": "2026-05-20T17:00:00Z",
+			"number": "039",
+			"githubUrl": "https://github.com/ethereum/pm/issues/1997",
+			"issueNumber": 1997,
+			"agendaItems": [
+				"Update of ERC-8117 (@xinbenlv)",
+				"https://x.com/_julianma/status/2033852383290102109 (@bomanaps)",
+				"https://github.com/ethereum/ERCs/pull/1639 (@PatrickAlphaC)"
+			],
+			"createdAt": "2026-03-31T17:50:55Z",
+			"updatedAt": "2026-04-15T17:20:27Z",
+			"youtubeUrl": null
+		},
+		{
+			"type": "acde",
+			"title": "All Core Devs - Execution (ACDE) #237, May 21, 2026",
+			"date": "2026-05-21",
+			"startTimeUtc": "2026-05-21T14:00:00Z",
+			"number": "237",
+			"githubUrl": "https://github.com/ethereum/pm/issues/2044",
+			"issueNumber": 2044,
+			"agendaItems": ["Glam", "Hegotá", "-"],
+			"createdAt": "2026-05-10T17:00:28Z",
+			"updatedAt": "2026-05-10T17:01:26Z",
+			"youtubeUrl": "https://youtube.com/watch?v=EuUZbpMoIjM"
+		}
+	]
+}

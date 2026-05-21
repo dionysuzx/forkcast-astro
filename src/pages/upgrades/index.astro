@@ -1,0 +1,95 @@
+---
+import { ChevronRight, ExternalLink } from "@lucide/astro";
+import UpgradeCard from "@/components/upgrades/UpgradeCard.astro";
+import { networkUpgrades } from "@/domain/upgrades/upgrade";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const isInProgress = (upgrade: (typeof networkUpgrades)[number]) =>
+	!upgrade.disabled && upgrade.status !== "Live";
+const inProgressStatusOrder = new Map([
+	["Upcoming", 0],
+	["Planning", 1],
+	["Research", 2],
+]);
+const activationTimestamp = (date?: string) => {
+	if (!date) return Number.NEGATIVE_INFINITY;
+	const timestamp = Date.parse(date);
+	return Number.isFinite(timestamp) ? timestamp : Number.NEGATIVE_INFINITY;
+};
+const inProgress = networkUpgrades
+	.filter(isInProgress)
+	.sort(
+		(a, b) =>
+			(inProgressStatusOrder.get(a.status) ?? 99) -
+			(inProgressStatusOrder.get(b.status) ?? 99),
+	);
+const live = networkUpgrades
+	.filter((upgrade) => !isInProgress(upgrade))
+	.sort(
+		(a, b) =>
+			activationTimestamp(b.activationDate) -
+			activationTimestamp(a.activationDate),
+	);
+---
+
+<BaseLayout title="Network Upgrades - Forkcast" description="Catalog of Ethereum network upgrades.">
+  <div class="min-h-screen bg-slate-50 p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-8">
+        <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Network Upgrades</h1>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          Every Ethereum network upgrade Forkcast tracks — what's currently being scoped, what's live, and the historical record.
+        </p>
+      </div>
+
+      <section class="mb-12">
+        <h2 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">In Progress</h2>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {
+          inProgress.map((upgrade) => (
+            <UpgradeCard upgrade={upgrade} />
+          ))
+        }
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Live</h2>
+        <ul class="overflow-hidden rounded-lg border border-slate-200 bg-white divide-y divide-slate-200 dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800">
+          {
+            live.map((upgrade) => {
+              const external = Boolean(upgrade.disabled && upgrade.externalLink);
+              const interactive = !upgrade.disabled || external;
+              const row = (
+                <div class={`flex items-center gap-4 px-5 py-4 transition-colors ${interactive ? "group hover:bg-slate-50 dark:hover:bg-slate-700/40" : ""}`}>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h3 class={`text-sm font-medium ${upgrade.disabled ? "text-slate-600 dark:text-slate-300" : "text-slate-900 dark:text-slate-100"}`}>{upgrade.name}</h3>
+                      {upgrade.activationDate && <span class="text-xs text-slate-500 sm:hidden dark:text-slate-400">· {upgrade.activationDate}</span>}
+                    </div>
+                    <p class={`mt-1 truncate text-sm ${upgrade.disabled ? "text-slate-500 dark:text-slate-400" : "text-slate-600 dark:text-slate-300"}`}>{upgrade.tagline}</p>
+                  </div>
+                  <span class="hidden w-24 shrink-0 text-right text-xs tabular-nums text-slate-500 sm:inline-block dark:text-slate-400">{upgrade.activationDate ?? ""}</span>
+                  {interactive && (
+                    external ? (
+                      <ExternalLink class="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                    ) : (
+                      <ChevronRight class="h-4 w-4 shrink-0 text-slate-400 group-hover:text-purple-500" aria-hidden="true" />
+                    )
+                  )}
+                </div>
+              );
+              if (external) {
+                return <li><a href={upgrade.externalLink} target="_blank" rel="noopener noreferrer" class="block">{row}</a></li>;
+              }
+              if (upgrade.disabled) {
+                return <li class="opacity-70">{row}</li>;
+              }
+              return <li><a href={upgrade.path} class="block">{row}</a></li>;
+            })
+          }
+        </ul>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

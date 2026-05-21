@@ -1,0 +1,120 @@
+---
+import StructuredDecision from "@/components/calls/StructuredDecision.astro";
+import { listAllDecisions } from "@/domain/calls/artifacts";
+import { protocolCalls } from "@/domain/calls/call";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const callDecisionSets = listAllDecisions(protocolCalls);
+const decisionCount = callDecisionSets.reduce(
+	(total, set) => total + set.decisions.length,
+	0,
+);
+const decisionFilters = [
+	["all", "All"],
+	["stage_change", "Stage Changes"],
+	["devnet_inclusion", "Devnet"],
+	["headliner_selected", "Headliner"],
+	["other", "Other"],
+];
+const formatDate = (date: string): string =>
+	new Intl.DateTimeFormat("en-US", {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+		timeZone: "UTC",
+	}).format(new Date(`${date}T00:00:00Z`));
+---
+
+<BaseLayout title="Key Decisions - Forkcast" description="Key decisions from Ethereum protocol calls.">
+  <div class="min-h-screen bg-slate-50 p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100" data-decisions-root>
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-6">
+        <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Key Decisions</h1>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Key decisions from AllCoreDevs meetings, aggregated in reverse-chronological order.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {decisionFilters.map(([value, label], index) => (
+            <button
+              type="button"
+              data-decision-filter={value}
+              data-active={String(index === 0)}
+              class="rounded-full px-3 py-1.5 text-sm font-medium transition-colors data-[active=true]:bg-purple-600 data-[active=true]:text-white data-[active=false]:border data-[active=false]:border-slate-200 data-[active=false]:bg-white data-[active=false]:text-slate-600 data-[active=false]:hover:border-purple-300 dark:data-[active=true]:bg-purple-500 dark:data-[active=true]:text-white dark:data-[active=false]:border-slate-700 dark:data-[active=false]:bg-slate-800 dark:data-[active=false]:text-slate-300 dark:data-[active=false]:hover:border-purple-600"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p id="decision-count" class="mt-3 text-xs text-slate-400 dark:text-slate-500">{decisionCount} decisions across {callDecisionSets.length} calls</p>
+      </div>
+      <div class="space-y-6" data-decision-list>
+        {
+          callDecisionSets.map(({ call, decisions }) => (
+            <section class="decision-section">
+              <div class="mb-2 flex items-baseline gap-2">
+                <a href={`/calls/${call.path}`} data-astro-prefetch class="text-sm font-semibold text-purple-600 transition-colors hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300">
+                  {call.type.toUpperCase()} #{call.number}
+                </a>
+                <span class="text-xs text-slate-400 dark:text-slate-500">{formatDate(call.date)}</span>
+              </div>
+              <ul class="ml-0 list-none space-y-1.5">
+                {decisions.map((decision) => (
+                  <li
+                    class="decision-row text-sm text-slate-600 before:mr-2 before:text-slate-400 before:content-['→'] dark:text-slate-400 dark:before:text-slate-500"
+                    data-decision-type={decision.type}
+                  >
+                    <StructuredDecision decision={decision} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <script>
+    const setupDecisionsPage = () => {
+      const root = document.querySelector<HTMLElement>("[data-decisions-root]");
+      if (!root || root.dataset.decisionsBound === "true") return;
+      root.dataset.decisionsBound = "true";
+
+    const filters = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-decision-filter]"));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>(".decision-row"));
+    const sections = Array.from(root.querySelectorAll<HTMLElement>(".decision-section"));
+    const count = root.querySelector<HTMLElement>("#decision-count");
+
+    const applyDecisionFilter = (filter: string) => {
+      let visibleRows = 0;
+      let visibleSections = 0;
+
+      for (const row of rows) {
+        const visible = filter === "all" || row.dataset.decisionType === filter;
+        row.hidden = !visible;
+        if (visible) visibleRows += 1;
+      }
+
+      for (const section of sections) {
+        const visible = Array.from(section.querySelectorAll<HTMLElement>(".decision-row")).some((row) => !row.hidden);
+        section.hidden = !visible;
+        if (visible) visibleSections += 1;
+      }
+
+      if (count) {
+        count.textContent = `${visibleRows} decision${visibleRows === 1 ? "" : "s"} across ${visibleSections} call${visibleSections === 1 ? "" : "s"}`;
+      }
+    };
+
+    for (const button of filters) {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.decisionFilter ?? "all";
+        for (const candidate of filters) {
+          candidate.dataset.active = String(candidate === button);
+        }
+        applyDecisionFilter(filter);
+      });
+    }
+    };
+
+    setupDecisionsPage();
+    document.addEventListener("astro:page-load", setupDecisionsPage);
+  </script>
+</BaseLayout>

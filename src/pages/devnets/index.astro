@@ -1,0 +1,121 @@
+---
+import {
+	type DevnetSeriesCard,
+	devnetSeriesGroups,
+} from "@/domain/devnets/series";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const groups = devnetSeriesGroups();
+
+const colorClass = (categoryKey: string): string => {
+	switch (categoryKey) {
+		case "bal":
+			return "text-violet-600 dark:text-violet-400";
+		case "epbs":
+			return "text-cyan-600 dark:text-cyan-400";
+		case "glamsterdam":
+			return "text-purple-600 dark:text-purple-400";
+		case "blob":
+			return "text-amber-600 dark:text-amber-400";
+		case "perf":
+			return "text-rose-600 dark:text-rose-400";
+		default:
+			return "text-slate-500 dark:text-slate-400";
+	}
+};
+
+const groupAccent = (group: string): string => {
+	switch (group) {
+		case "Glamsterdam":
+			return "border-purple-300 dark:border-purple-700";
+		case "Fusaka":
+			return "border-fuchsia-300 dark:border-fuchsia-700";
+		case "Pectra":
+			return "border-indigo-300 dark:border-indigo-700";
+		case "Dencun":
+			return "border-lime-300 dark:border-lime-700";
+		default:
+			return "border-slate-300 dark:border-slate-600";
+	}
+};
+
+const cardOpacity = (card: DevnetSeriesCard): string =>
+	card.inactive ? "opacity-60" : "";
+---
+
+<BaseLayout title="Devnet Tracker - Forkcast" description="Active devnet series from ethPandaOps and Glamsterdam EIP prioritization data.">
+  <div class="min-h-screen bg-slate-50 p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-6">
+        <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Devnet Tracker</h1>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          Active devnet series from ethPandaOps and Glamsterdam EIP prioritization data.
+        </p>
+      </div>
+
+      <section class="devnet-series mb-8">
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Devnet Series</h2>
+          <label class="flex cursor-pointer select-none items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+            <input id="active-only" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 dark:border-slate-600" />
+            Active only
+          </label>
+        </div>
+
+        <div class="devnet-groups space-y-6">
+        {
+          groups.map(({ group, cards }) => (
+            <div>
+              <h3 class={`mb-3 border-l-2 pl-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 ${groupAccent(group)}`}>
+                {group}
+              </h3>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {cards.map((card) => (
+                  <article data-inactive={card.inactive ? "true" : "false"} class={`flex flex-col gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 ${cardOpacity(card)}`}>
+                    <a href={`/devnets/${card.categoryKey}`} class={`text-sm font-semibold uppercase tracking-wide transition hover:underline ${colorClass(card.categoryKey)}`}>
+                      {card.displayName}
+                    </a>
+                    <p class="line-clamp-3 text-xs leading-relaxed text-slate-500 dark:text-slate-400" title={card.description}>
+                      {card.description}
+                    </p>
+                    <div class="mt-auto space-y-1 border-t border-slate-100 pt-1 dark:border-slate-700/50">
+                      {card.upcomingSpecId && (
+                        <div class="flex items-center gap-1.5">
+                          <a href={`/devnets/${card.upcomingSpecId}`} class="font-mono text-xs font-medium text-purple-600 transition hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
+                            {card.upcomingSpecId}
+                          </a>
+                          <span class="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                            upcoming
+                          </span>
+                        </div>
+                      )}
+                      {card.activeKeys.map((key) => (
+                        <div>
+                          <a href={`/devnets/${key}`} class="font-mono text-xs font-medium text-purple-600 transition hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">
+                            {key}
+                          </a>
+                        </div>
+                      ))}
+                      {card.activeKeys.length === 0 && (
+                        <span class="text-xs italic text-slate-400 dark:text-slate-500">
+                          No active networks
+                        </span>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <style>
+    .devnet-series:has(#active-only:checked) .devnet-groups [data-inactive="true"] {
+      display: none;
+    }
+  </style>
+</BaseLayout>

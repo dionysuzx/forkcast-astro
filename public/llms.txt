@@ -1,0 +1,57 @@
+# Forkcast: Ethereum Upgrade Tracker
+
+> Source: https://github.com/ethereum/forkcast
+
+Forkcast tracks Ethereum network upgrades, EIPs, protocol calls, devnets,
+upgrade planning, and protocol decisions.
+
+## Site shape
+
+Forkcast is a static Astro site. Route HTML is useful without running client
+JavaScript, so agents can fetch pages directly and extract content from the
+rendered document.
+
+Primary route families:
+
+- `/` - upgrade overview, recent proposals, calls, and decisions
+- `/upgrades` - network upgrade index
+- `/upgrade/{id}` - network upgrade detail pages
+- `/upgrade/glamsterdam/{tab}` - Glamsterdam planning views
+- `/eips` - proposal index with rendered cards and table rows
+- `/eips/{number}` - EIP detail pages with analysis and rendered spec content
+- `/calls` - protocol call calendar
+- `/calls/{series}/{number}` - protocol call detail pages
+- `/devnets` - devnet index
+- `/devnets/{id}` - devnet detail pages
+- `/decisions` - protocol decisions grouped by call
+- `/agenda` - agenda planning artifacts
+- `/schedule` - static schedule planning view
+- `/rank` - Glamsterdam candidate ranking view
+
+Legacy URLs such as `/planner`, `/glamsterdam`, `/priority`, and
+`/complexity` are present as redirect pages.
+
+## Static artifacts
+
+Call artifacts are served as static files organized by series and call number:
+
+- Pattern: `/artifacts/{series}/{date}_{number}/{file}`
+- Example: `/artifacts/acde/2026-04-09_234/tldr.json`
+
+Available files vary by call and may include:
+
+- `tldr.json` - structured highlights grouped by topic, with timestamps
+- `key_decisions.json` - decisions made during the call, with EIP references
+- `transcript.vtt` / `transcript_corrected.vtt` - full call transcript
+- `chat.txt` - call chat log
+- `config.json` - call metadata
+
+Recent ACDE and ACDC calls generally include `tldr.json` and
+`key_decisions.json`. Older calls may only include transcripts and chat logs.
+
+## Reading guidance
+
+For proposal context, prefer `/eips/{number}` because it combines Forkcast's
+analysis fields with the rendered EIP markdown. For raw meeting artifacts,
+fetch `/artifacts/...` files directly. For overview tasks, start with `/`,
+`/upgrades`, `/eips`, `/calls`, `/devnets`, and `/decisions`.

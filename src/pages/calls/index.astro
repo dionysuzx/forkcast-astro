@@ -1,0 +1,648 @@
+---
+import { Search } from "@lucide/astro";
+import {
+	type CallType,
+	callTypeNames,
+	getCallDisplayName,
+	getCallTitle,
+	isOneOffCall,
+	protocolCalls,
+} from "@/domain/calls/call";
+import { upcomingCalls } from "@/domain/calls/upcoming-call";
+import { callTypeBadgeClass } from "@/domain/display";
+import { timelineEvents } from "@/domain/protocol-events/events";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const acdTypes = new Set(["acdc", "acde", "acdt"]);
+const formatDate = (date: string): string =>
+	new Intl.DateTimeFormat("en-US", {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+		timeZone: "UTC",
+	}).format(new Date(`${date}T00:00:00Z`));
+const formatUtcTime = (dateTime: string): string =>
+	new Intl.DateTimeFormat("en-US", {
+		hour: "numeric",
+		minute: "2-digit",
+		timeZone: "UTC",
+		timeZoneName: "short",
+	}).format(new Date(dateTime));
+const formatMonth = (date: string): string =>
+	new Intl.DateTimeFormat("en-US", {
+		month: "long",
+		year: "numeric",
+		timeZone: "UTC",
+	}).format(new Date(`${date}T00:00:00Z`));
+const groupByMonth = <Item extends { date: string }>(
+	items: Item[],
+): Array<{ monthLabel: string; items: Item[] }> => {
+	const groups = new Map<string, { monthLabel: string; items: Item[] }>();
+	for (const item of items) {
+		const key = item.date.slice(0, 7);
+		const group = groups.get(key) ?? {
+			monthLabel: formatMonth(item.date),
+			items: [],
+		};
+		group.items.push(item);
+		groups.set(key, group);
+	}
+	return Array.from(groups.values());
+};
+const filterTabs = [
+	{ value: "all", label: "All" },
+	{ value: "acd", label: "ACD" },
+	{ value: "acdc", label: "ACDC" },
+	{ value: "acde", label: "ACDE" },
+	{ value: "acdt", label: "ACDT" },
+	{ value: "breakouts", label: "Breakouts" },
+] as const;
+const filterDataClass: Record<string, string> = {
+	all: "data-[active=true]:bg-slate-600 data-[active=true]:text-white data-[active=false]:bg-slate-100 data-[active=false]:text-slate-600 data-[active=false]:hover:bg-slate-200 dark:data-[active=true]:bg-slate-400 dark:data-[active=true]:text-slate-900 dark:data-[active=false]:bg-slate-800 dark:data-[active=false]:text-slate-400 dark:data-[active=false]:hover:bg-slate-700",
+	acd: "data-[active=true]:bg-indigo-600 data-[active=true]:text-white data-[active=false]:bg-indigo-50 data-[active=false]:text-indigo-700 data-[active=false]:hover:bg-indigo-100 dark:data-[active=true]:bg-indigo-500 dark:data-[active=true]:text-white dark:data-[active=false]:bg-indigo-950/30 dark:data-[active=false]:text-indigo-400 dark:data-[active=false]:hover:bg-indigo-900/30",
+	acdc: "data-[active=true]:bg-blue-600 data-[active=true]:text-white data-[active=false]:bg-blue-50 data-[active=false]:text-blue-700 data-[active=false]:hover:bg-blue-100 dark:data-[active=true]:bg-blue-500 dark:data-[active=true]:text-white dark:data-[active=false]:bg-blue-950/30 dark:data-[active=false]:text-blue-400 dark:data-[active=false]:hover:bg-blue-900/30",
+	acde: "data-[active=true]:bg-sky-600 data-[active=true]:text-white data-[active=false]:bg-sky-50 data-[active=false]:text-sky-700 data-[active=false]:hover:bg-sky-100 dark:data-[active=true]:bg-sky-500 dark:data-[active=true]:text-white dark:data-[active=false]:bg-sky-950/30 dark:data-[active=false]:text-sky-400 dark:data-[active=false]:hover:bg-sky-900/30",
+	acdt: "data-[active=true]:bg-cyan-600 data-[active=true]:text-white data-[active=false]:bg-cyan-50 data-[active=false]:text-cyan-700 data-[active=false]:hover:bg-cyan-100 dark:data-[active=true]:bg-cyan-500 dark:data-[active=true]:text-white dark:data-[active=false]:bg-cyan-950/30 dark:data-[active=false]:text-cyan-400 dark:data-[active=false]:hover:bg-cyan-900/30",
+	breakouts:
+		"data-[active=true]:bg-yellow-600 data-[active=true]:text-white data-[active=false]:bg-yellow-50 data-[active=false]:text-yellow-700 data-[active=false]:hover:bg-yellow-100 dark:data-[active=true]:bg-yellow-500 dark:data-[active=true]:text-yellow-950 dark:data-[active=false]:bg-yellow-950/30 dark:data-[active=false]:text-yellow-400 dark:data-[active=false]:hover:bg-yellow-900/30",
+};
+const filterButtonClass = (value: string): string =>
+	[
+		"call-filter shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-xs font-medium transition-all",
+		filterDataClass[value],
+	].join(" ");
+const breakoutTypes = Array.from(
+	new Set(
+		[
+			...protocolCalls.map((call) => call.type),
+			...upcomingCalls.map((call) => call.type),
+		].filter((type) => !acdTypes.has(type) && !isOneOffCall(type)),
+	),
+).sort((a, b) =>
+	(callTypeNames[a as keyof typeof callTypeNames] ?? a).localeCompare(
+		callTypeNames[b as keyof typeof callTypeNames] ?? b,
+	),
+);
+const hasOneOffCalls = protocolCalls.some((call) => isOneOffCall(call.type));
+const callBorderClass: Record<CallType, string> = {
+	acdc: "border-l-blue-500 dark:border-l-blue-400",
+	acde: "border-l-sky-500 dark:border-l-sky-400",
+	acdt: "border-l-cyan-500 dark:border-l-cyan-400",
+	epbs: "border-l-amber-500 dark:border-l-amber-400",
+	bal: "border-l-red-500 dark:border-l-red-400",
+	focil: "border-l-orange-500 dark:border-l-orange-400",
+	price: "border-l-rose-500 dark:border-l-rose-400",
+	tli: "border-l-pink-500 dark:border-l-pink-400",
+	pqts: "border-l-yellow-500 dark:border-l-yellow-400",
+	rpc: "border-l-violet-500 dark:border-l-violet-400",
+	zkevm: "border-l-fuchsia-500 dark:border-l-fuchsia-400",
+	etm: "border-l-purple-500 dark:border-l-purple-400",
+	awd: "border-l-lime-500 dark:border-l-lime-400",
+	pqi: "border-l-emerald-500 dark:border-l-emerald-400",
+	fcr: "border-l-teal-500 dark:border-l-teal-400",
+	aa: "border-l-indigo-500 dark:border-l-indigo-400",
+};
+const callTypeBorderClass = (type: string): string =>
+	callBorderClass[type as CallType] ??
+	"border-l-slate-400 dark:border-l-slate-500";
+const eventCardClass: Record<string, string> = {
+	mainnet:
+		"border-emerald-300/90 bg-emerald-50/70 dark:border-emerald-700/70 dark:bg-emerald-950/20",
+	testnet:
+		"border-teal-300/90 bg-teal-50/70 dark:border-teal-700/70 dark:bg-teal-950/20",
+	milestone:
+		"border-blue-300/90 bg-blue-50/70 dark:border-blue-700/70 dark:bg-blue-950/20",
+	announcement:
+		"border-purple-300/90 bg-purple-50/70 dark:border-purple-700/70 dark:bg-purple-950/20",
+	devnet:
+		"border-orange-300/90 bg-orange-50/70 dark:border-orange-700/70 dark:bg-orange-950/20",
+};
+const eventDotClass: Record<string, string> = {
+	mainnet: "bg-emerald-500 dark:bg-emerald-400",
+	testnet: "bg-teal-500 dark:bg-teal-400",
+	milestone: "bg-blue-500 dark:bg-blue-400",
+	announcement: "bg-purple-500 dark:bg-purple-400",
+	devnet: "bg-orange-500 dark:bg-orange-400",
+};
+const futureMonthGroups = groupByMonth(
+	[...upcomingCalls].sort(
+		(a, b) => a.date.localeCompare(b.date) || a.type.localeCompare(b.type),
+	),
+);
+const previousTimelineItems = [...protocolCalls, ...timelineEvents].sort(
+	(a, b) => b.date.localeCompare(a.date),
+);
+const previousMonthGroups = groupByMonth(previousTimelineItems);
+---
+
+<BaseLayout title="Protocol Calls - Forkcast" description="Browse Ethereum protocol development calls.">
+  <div class="min-h-screen bg-slate-50 p-6 dark:bg-slate-900" data-call-index-root>
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-6">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Protocol Calendar</h1>
+            <a
+              href="https://calendar.google.com/calendar/embed?src=c_upaofong8mgrmrkegn7ic7hk5s%40group.calendar.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+            >
+              Full calendar ↗
+            </a>
+          </div>
+          <button
+            type="button"
+            data-open-call-index-search
+            class="inline-flex h-10 w-10 items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white p-0 text-sm text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/30 sm:w-64 sm:justify-between sm:px-3 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+            aria-label="Search calls"
+          >
+            <span class="inline-flex min-w-0 items-center gap-2">
+              <Search class="h-4 w-4 shrink-0 text-slate-400" />
+              <span class="hidden truncate sm:inline">Search calls...</span>
+            </span>
+            <kbd class="hidden shrink-0 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 sm:block dark:border-slate-700 dark:bg-slate-900 dark:text-slate-500">⌘K</kbd>
+          </button>
+        </div>
+
+        <div class="mt-4">
+          <div id="call-filter-tabs" class="flex flex-nowrap gap-1.5 overflow-x-auto sm:flex-wrap">
+          {filterTabs.map((filter, index) => (
+            <button type="button" class={filterButtonClass(filter.value)} data-filter={filter.value} data-active={String(index === 0)}>
+              {filter.label}
+            </button>
+          ))}
+          </div>
+          <div id="breakout-filter-panel" class="relative hidden items-center gap-1.5">
+            <button id="breakout-filter-back" type="button" class="shrink-0 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700" aria-label="Back to all filters">
+              ←
+            </button>
+            <button id="breakout-filter-button" type="button" class="inline-flex items-baseline gap-1 border-yellow-400 border-b-2 text-sm font-medium text-yellow-700 transition-colors hover:border-yellow-500 dark:border-yellow-500 dark:text-yellow-300 dark:hover:border-yellow-400" aria-haspopup="menu" aria-expanded="false">
+              <span id="breakout-filter-label">All Breakouts</span>
+              <svg class="h-3 w-3 transition-transform" data-breakout-filter-chevron fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div id="breakout-filter-menu" class="absolute left-9 top-full z-40 mt-1 hidden min-w-52 rounded border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800" role="menu">
+              <button type="button" data-breakout-type="" class="block w-full px-4 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50 data-[active=true]:bg-yellow-50 data-[active=true]:text-yellow-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:data-[active=true]:bg-yellow-900/20 dark:data-[active=true]:text-yellow-300" data-active="true">All Breakouts</button>
+              {breakoutTypes.map((type) => (
+                <button type="button" data-breakout-type={type} class="block w-full px-4 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50 data-[active=true]:bg-yellow-50 data-[active=true]:text-yellow-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:data-[active=true]:bg-yellow-900/20 dark:data-[active=true]:text-yellow-300" data-active="false">
+                  {callTypeNames[type as keyof typeof callTypeNames] ?? type.toUpperCase()}
+                </button>
+              ))}
+              {hasOneOffCalls && (
+                <button type="button" data-breakout-type="one-off" class="block w-full px-4 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50 data-[active=true]:bg-yellow-50 data-[active=true]:text-yellow-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:data-[active=true]:bg-yellow-900/20 dark:data-[active=true]:text-yellow-300" data-active="false">One-Off Calls</button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        {
+          upcomingCalls.length > 0 && (
+            <section class="call-date-section rounded-lg border border-emerald-200/70 bg-emerald-50/60 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/10">
+              <div>
+                <h2 class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
+                  Future Events
+                </h2>
+              </div>
+              <div class="mt-4 space-y-5">
+                {futureMonthGroups.map((group) => (
+                  <div class="call-month-group space-y-3">
+                    <div class="flex items-center gap-3">
+                      <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                        {group.monthLabel}
+                      </h3>
+                      <div class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></div>
+                    </div>
+                    <div class="space-y-3">
+                      {group.items.map((call) => {
+                        const searchText = `${call.title} ${call.type} ${call.date} ${call.issueNumber} ${call.agendaItems.join(" ")}`.toLowerCase();
+                        const filterGroup = acdTypes.has(call.type) ? "acd" : "breakouts";
+                        const href = call.youtubeUrl ?? call.githubUrl;
+                        const title = `${callTypeNames[call.type] ?? call.type} #${call.number}`;
+                        return (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class={`call-row group block rounded-lg border border-slate-200 border-l-[3px] bg-white p-3 transition-all hover:border-slate-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600 dark:hover:shadow-slate-700/20 ${callTypeBorderClass(call.type)}`}
+                            style="border-left-style: dashed"
+                            data-type={call.type}
+                            data-group={filterGroup}
+                            data-search={searchText}
+                            data-title={title}
+                            data-date={call.date}
+                            data-meta={`${formatDate(call.date)} at ${formatUtcTime(call.startTimeUtc)} · Agenda #${call.issueNumber}`}
+                          >
+                            <div class="flex items-center justify-between gap-3">
+                              <div class="flex min-w-0 items-center gap-3">
+                                <span class={`inline-block min-w-[3.5rem] flex-shrink-0 rounded-full px-2 py-0.5 text-center text-xs font-medium ${callTypeBadgeClass(call.type)}`}>
+                                  {call.type.toUpperCase()}
+                                </span>
+                                <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                                  <span class="sm:hidden">Call #{call.number}</span>
+                                  <span class="hidden sm:inline">{title}</span>
+                                </div>
+                              </div>
+                              <div class="flex flex-shrink-0 items-center gap-3">
+                                <div class="text-sm text-slate-600 dark:text-slate-400">{call.date}</div>
+                                <div class="text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-300">
+                                  {call.youtubeUrl ? "→" : "↗"}
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          <section class="call-date-section rounded-lg border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/40">
+            <div>
+              <h2 class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                Previous Events
+              </h2>
+            </div>
+
+            <div class="mt-4 space-y-5">
+              {previousMonthGroups.map((group) => (
+                <div class="call-month-group space-y-3">
+                  <div class="flex items-center gap-3">
+                    <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                      {group.monthLabel}
+                    </h3>
+                    <div class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></div>
+                  </div>
+                  <div class="space-y-3">
+                    {group.items.map((item) => {
+                      if ("category" in item) {
+                        return (
+                          <div class={`timeline-event-row rounded-lg border px-4 py-3 opacity-85 shadow-sm ${eventCardClass[item.category]}`}>
+                            <div class="flex items-center justify-between gap-3">
+                              <div class="flex min-w-0 items-center gap-3">
+                                <div class={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${eventDotClass[item.category]}`}></div>
+                                <div class="min-w-0">
+                                  <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{item.title}</div>
+                                  <div class="mt-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">
+                                    {item.category}
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="flex-shrink-0 text-sm text-slate-600 dark:text-slate-400">{item.date}</div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      const oneOff = isOneOffCall(item.type);
+                      const searchText = `${getCallDisplayName(item)} ${getCallTitle(item)} ${item.type} ${item.date}`.toLowerCase();
+                      const filterGroup = acdTypes.has(item.type) ? "acd" : "breakouts";
+                      return (
+                        <a
+                          href={`/calls/${item.path}`}
+                          data-astro-prefetch
+                          class={`call-row group block rounded-lg border border-slate-200 border-l-4 bg-white p-3 transition-all hover:border-slate-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600 dark:hover:shadow-slate-700/20 ${callTypeBorderClass(item.type)}`}
+                          data-type={item.type}
+                          data-group={filterGroup}
+                          data-search={searchText}
+                          data-title={getCallTitle(item)}
+                          data-date={formatDate(item.date)}
+                          data-meta={item.issue ? `Issue #${item.issue}` : getCallDisplayName(item)}
+                        >
+                          <div class="flex items-center justify-between gap-3">
+                            <div class="flex min-w-0 items-center gap-3">
+                              <span class={`inline-block min-w-[3.5rem] flex-shrink-0 rounded-full px-2 py-0.5 text-center text-xs font-medium ${callTypeBadgeClass(item.type)}`}>
+                                {oneOff ? "1-OFF" : item.type.toUpperCase()}
+                              </span>
+                              <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                                {oneOff ? (
+                                  item.name || item.type
+                                ) : (
+                                  <>
+                                    <span class="sm:hidden">Call #{item.number}</span>
+                                    <span class="hidden sm:inline">{callTypeNames[item.type as keyof typeof callTypeNames] ?? item.type} #{item.number}</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <div class="flex flex-shrink-0 items-center gap-3">
+                              <div class="text-sm text-slate-600 dark:text-slate-400">{item.date}</div>
+                              <div class="text-slate-400 transition-colors group-hover:text-slate-600 dark:text-slate-400 dark:group-hover:text-slate-300">
+                                →
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        }
+      </div>
+    </div>
+  </div>
+  <div id="call-index-search-modal" class="fixed inset-0 z-50 hidden items-start justify-center px-2 pt-4 sm:px-4 sm:pt-20" role="dialog" aria-modal="true" aria-labelledby="call-index-search-title" aria-hidden="true" hidden>
+    <button id="call-index-search-backdrop" type="button" class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" aria-label="Close call search"></button>
+    <div class="relative max-h-[86vh] w-full max-w-4xl overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/20 dark:border-slate-700 dark:bg-slate-800 dark:shadow-black/40">
+      <div class="border-slate-200 border-b dark:border-slate-700">
+        <div class="flex items-center gap-3 px-4 py-3">
+          <Search class="h-5 w-5 shrink-0 text-slate-400" />
+          <label id="call-index-search-title" for="call-index-search-input" class="sr-only">Search calls</label>
+          <input id="call-index-search-input" type="search" autocomplete="off" placeholder="Search calls..." class="min-h-11 flex-1 bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-400" />
+          <button id="call-index-search-close" type="button" class="rounded-md p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-200" aria-label="Close search">
+            ×
+          </button>
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto px-4 pb-4">
+          {["all", "acdc", "acde", "acdt", "breakouts"].map((filter) => (
+            <button type="button" data-call-search-filter={filter} data-active={String(filter === "all")} class="shrink-0 rounded-md px-2.5 py-1.5 text-xs font-medium transition data-[active=true]:bg-blue-50 data-[active=true]:text-blue-700 data-[active=false]:text-slate-600 data-[active=false]:hover:bg-slate-100 dark:data-[active=true]:bg-blue-900/30 dark:data-[active=true]:text-blue-300 dark:data-[active=false]:text-slate-300 dark:data-[active=false]:hover:bg-slate-700">
+              {filter === "all" ? "All Calls" : filter === "breakouts" ? "Breakouts" : filter.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div id="call-index-search-results" class="max-h-[60vh] overflow-y-auto py-2 sm:max-h-96">
+        <div id="call-index-search-empty" class="p-8 text-center text-sm text-slate-500 dark:text-slate-400">Start typing to search calls</div>
+      </div>
+      <div id="call-index-search-footer" class="hidden border-slate-200 border-t px-4 py-2 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400"></div>
+    </div>
+  </div>
+
+  <script>
+    const setupCallIndex = () => {
+      const root = document.querySelector<HTMLElement>("[data-call-index-root]");
+      if (!root || root.dataset.callIndexBound === "true") return;
+      root.dataset.callIndexBound = "true";
+
+      const controller = new AbortController();
+      const { signal } = controller;
+      document.addEventListener("astro:before-swap", () => controller.abort(), {
+        once: true,
+      });
+
+    const filterTabs = document.getElementById("call-filter-tabs");
+    const breakoutPanel = document.getElementById("breakout-filter-panel");
+    const breakoutButton = document.getElementById("breakout-filter-button");
+    const breakoutLabel = document.getElementById("breakout-filter-label");
+    const breakoutMenu = document.getElementById("breakout-filter-menu");
+    const breakoutBack = document.getElementById("breakout-filter-back");
+    const breakoutChevron = document.querySelector<HTMLElement>("[data-breakout-filter-chevron]");
+    const breakoutOptions = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-breakout-type]"));
+    const filters = Array.from(document.querySelectorAll<HTMLButtonElement>(".call-filter"));
+    const rows = Array.from(document.querySelectorAll<HTMLElement>(".call-row"));
+    let activeFilter = "all";
+    let activeBreakout = "";
+
+    const applyFilters = () => {
+      for (const row of rows) {
+        const type = row.dataset.type ?? "";
+        const matchesFilter =
+          activeFilter === "all" ||
+          row.dataset.type === activeFilter ||
+          row.dataset.group === activeFilter;
+        const matchesBreakout =
+          activeFilter !== "breakouts" ||
+          !activeBreakout ||
+          (activeBreakout === "one-off" ? type.startsWith("one-off-") : type === activeBreakout);
+        row.hidden = !(matchesFilter && matchesBreakout);
+      }
+      for (const group of document.querySelectorAll<HTMLElement>(".call-month-group")) {
+        const hasVisibleRow = Array.from(group.querySelectorAll<HTMLElement>(".call-row")).some((row) => !row.hidden);
+        const hasEvent = group.querySelector(".timeline-event-row") !== null;
+        group.hidden = !(hasVisibleRow || hasEvent);
+      }
+      for (const section of document.querySelectorAll<HTMLElement>(".call-date-section")) {
+        const visible =
+          Array.from(section.querySelectorAll<HTMLElement>(".call-row")).some((row) => !row.hidden) ||
+          section.querySelector(".timeline-event-row") !== null;
+        section.hidden = !visible;
+      }
+    };
+
+    const setBreakoutMenuOpen = (open: boolean) => {
+      breakoutMenu?.classList.toggle("hidden", !open);
+      breakoutButton?.setAttribute("aria-expanded", String(open));
+      breakoutChevron?.classList.toggle("rotate-180", open);
+    };
+
+    const setActiveFilter = (filter: string) => {
+      activeFilter = filter;
+      if (filter !== "breakouts") activeBreakout = "";
+      filterTabs?.classList.toggle("hidden", filter === "breakouts");
+      breakoutPanel?.classList.toggle("hidden", filter !== "breakouts");
+      breakoutPanel?.classList.toggle("flex", filter === "breakouts");
+      for (const button of filters) button.dataset.active = String(button.dataset.filter === filter);
+      setBreakoutMenuOpen(filter === "breakouts");
+      applyFilters();
+    };
+
+    for (const filter of filters) {
+      filter.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setActiveFilter(filter.dataset.filter ?? "all");
+      });
+    }
+
+    breakoutButton?.addEventListener("click", () => {
+      setBreakoutMenuOpen(Boolean(breakoutMenu?.classList.contains("hidden")));
+    });
+
+    breakoutBack?.addEventListener("click", () => {
+      setActiveFilter("all");
+    });
+
+    for (const option of breakoutOptions) {
+      option.addEventListener("click", () => {
+        activeBreakout = option.dataset.breakoutType ?? "";
+        if (breakoutLabel) breakoutLabel.textContent = option.textContent?.trim() || "All Breakouts";
+        for (const candidate of breakoutOptions) {
+          candidate.dataset.active = String(candidate === option);
+        }
+        setBreakoutMenuOpen(false);
+        applyFilters();
+      });
+    }
+
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Node)) return;
+      if (breakoutPanel?.contains(event.target)) return;
+      setBreakoutMenuOpen(false);
+    }, { signal });
+
+    const searchModal = document.getElementById("call-index-search-modal");
+    const searchInput = document.getElementById("call-index-search-input") as HTMLInputElement | null;
+    const searchResults = document.getElementById("call-index-search-results");
+    const searchEmpty = document.getElementById("call-index-search-empty");
+    const searchFooter = document.getElementById("call-index-search-footer");
+    const searchClose = document.getElementById("call-index-search-close");
+    const searchBackdrop = document.getElementById("call-index-search-backdrop");
+    const searchTriggers = Array.from(document.querySelectorAll<HTMLElement>("[data-open-call-index-search]"));
+    const searchFilterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-call-search-filter]"));
+    let activeSearchFilter = "all";
+    let selectedSearchIndex = 0;
+    let renderedSearchResults: HTMLElement[] = [];
+
+    const searchDocuments = rows.map((row) => ({
+      href: row.getAttribute("href") ?? "",
+      type: row.dataset.type ?? "",
+      group: row.dataset.group ?? "",
+      title: row.dataset.title ?? "",
+      date: row.dataset.date ?? "",
+      meta: row.dataset.meta ?? "",
+      search: row.dataset.search ?? "",
+    }));
+
+    const isSearchModalOpen = () => Boolean(searchModal && !searchModal.classList.contains("hidden"));
+
+    const openSearchModal = () => {
+      if (!searchModal || !searchInput) return;
+      searchModal.hidden = false;
+      searchModal.classList.remove("hidden");
+      searchModal.classList.add("flex");
+      searchModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      window.setTimeout(() => searchInput.focus(), 0);
+      renderCallSearchResults();
+    };
+
+    const closeSearchModal = () => {
+      if (!searchModal) return;
+      searchModal.classList.add("hidden");
+      searchModal.classList.remove("flex");
+      searchModal.hidden = true;
+      searchModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    const appendText = (parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className: string) => {
+      const child = document.createElement(tagName);
+      child.textContent = text;
+      child.className = className;
+      parent.append(child);
+      return child;
+    };
+
+    const renderCallSearchResults = () => {
+      if (!searchResults || !searchEmpty || !searchFooter) return;
+      const query = searchInput?.value.trim().toLowerCase() ?? "";
+      const matches = searchDocuments
+        .filter((document) => {
+          const matchesFilter =
+            activeSearchFilter === "all" ||
+            document.type === activeSearchFilter ||
+            document.group === activeSearchFilter;
+          const matchesQuery = !query || document.search.includes(query) || document.title.toLowerCase().includes(query);
+          return matchesFilter && matchesQuery;
+        })
+        .slice(0, query ? 80 : 20);
+
+      selectedSearchIndex = Math.min(selectedSearchIndex, Math.max(matches.length - 1, 0));
+      renderedSearchResults = [];
+      searchResults.replaceChildren();
+
+      if (!query && activeSearchFilter === "all") {
+        searchEmpty.textContent = "Start typing to search calls";
+        searchResults.append(searchEmpty);
+        searchFooter.classList.add("hidden");
+        return;
+      }
+
+      if (matches.length === 0) {
+        searchEmpty.textContent = "No calls found";
+        searchResults.append(searchEmpty);
+        searchFooter.classList.add("hidden");
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      for (const [index, result] of matches.entries()) {
+        const link = document.createElement("a");
+        link.href = result.href;
+        link.setAttribute("data-astro-prefetch", "");
+        link.className = `block px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-700/30 ${index === selectedSearchIndex ? "bg-slate-50 dark:bg-slate-700/30" : ""}`;
+        const row = document.createElement("div");
+        row.className = "flex items-start gap-3";
+        appendText(row, "span", result.type.toUpperCase(), "inline-flex w-14 shrink-0 justify-center rounded bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300");
+        const body = document.createElement("div");
+        body.className = "min-w-0 flex-1";
+        appendText(body, "div", result.title, "mb-1 truncate text-sm font-medium text-slate-900 dark:text-slate-100");
+        appendText(body, "p", result.meta || result.date, "text-xs text-slate-500 dark:text-slate-400");
+        row.append(body);
+        link.append(row);
+        link.addEventListener("mouseenter", () => {
+          selectedSearchIndex = index;
+          renderCallSearchResults();
+        });
+        renderedSearchResults.push(link);
+        fragment.append(link);
+      }
+      searchResults.append(fragment);
+      searchFooter.textContent = `${matches.length} result${matches.length === 1 ? "" : "s"} · Up/Down Navigate · Enter Open · Esc Close`;
+      searchFooter.classList.remove("hidden");
+    };
+
+    for (const trigger of searchTriggers) trigger.addEventListener("click", openSearchModal);
+    searchClose?.addEventListener("click", closeSearchModal);
+    searchBackdrop?.addEventListener("click", closeSearchModal);
+    searchInput?.addEventListener("input", () => {
+      selectedSearchIndex = 0;
+      renderCallSearchResults();
+    });
+    for (const button of searchFilterButtons) {
+      button.addEventListener("click", () => {
+        activeSearchFilter = button.dataset.callSearchFilter ?? "all";
+        selectedSearchIndex = 0;
+        for (const candidate of searchFilterButtons) {
+          candidate.dataset.active = String(candidate === button);
+        }
+        renderCallSearchResults();
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        openSearchModal();
+        searchInput?.select();
+        return;
+      }
+
+      if (isSearchModalOpen()) {
+        if (event.key === "Escape") {
+          closeSearchModal();
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          selectedSearchIndex = Math.min(selectedSearchIndex + 1, renderedSearchResults.length - 1);
+          renderCallSearchResults();
+          return;
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          selectedSearchIndex = Math.max(selectedSearchIndex - 1, 0);
+          renderCallSearchResults();
+          return;
+        }
+        if (event.key === "Enter" && renderedSearchResults[selectedSearchIndex]) {
+          event.preventDefault();
+          renderedSearchResults[selectedSearchIndex].click();
+        }
+      }
+    }, { signal });
+    };
+
+    setupCallIndex();
+    document.addEventListener("astro:page-load", setupCallIndex);
+  </script>
+</BaseLayout>

@@ -1,0 +1,74 @@
+---
+import type { KeyDecision } from "@/domain/calls/artifacts";
+import {
+	keyDecisionTagClass,
+	keyDecisionTagLabel,
+} from "@/domain/calls/key-decisions";
+import {
+	getLaymanTitle,
+	getProposal,
+	getProposalCode,
+	type Proposal,
+} from "@/domain/proposals/proposal";
+
+interface Props {
+	decision: KeyDecision;
+}
+
+const { decision } = Astro.props;
+const tagLabel = keyDecisionTagLabel(decision);
+const tagClass = keyDecisionTagClass(decision);
+const proposals = decision.eips
+	.map((id) => getProposal(id))
+	.filter((proposal): proposal is Proposal => Boolean(proposal));
+const contextSuffix = decision.context ? `; ${decision.context}` : "";
+---
+
+{
+	proposals.length === 0 || decision.type === "other" ? (
+		<span>{decision.original_text}</span>
+	) : (
+		<span>
+			{proposals.map((proposal, index) => (
+				<>
+					{index > 0 && <span>, </span>}
+					<a
+						href={`/eips/${proposal.id}`}
+						data-astro-prefetch
+						title={getLaymanTitle(proposal)}
+						class="font-mono text-blue-600 underline decoration-dotted underline-offset-2 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+					>
+						{getProposalCode(proposal)}
+					</a>
+				</>
+			))}
+			{decision.type === "headliner_selected" ? (
+				<>
+					{" selected as "}
+					<span class={`inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium ${tagClass}`}>{tagLabel}</span>
+					{decision.fork && (
+						<>
+							{"; moved to "}
+							<span class="inline-flex items-center rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+								SFI
+							</span>
+							{" for "}{decision.fork}
+						</>
+					)}
+				</>
+			) : decision.type === "devnet_inclusion" ? (
+				<>
+					{" included in "}
+					<span class={`inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium ${tagClass}`}>{tagLabel}</span>
+				</>
+			) : (
+				<>
+					{" moved to "}
+					<span class={`inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium ${tagClass}`}>{tagLabel}</span>
+					{decision.fork && <span>{" for "}{decision.fork}</span>}
+				</>
+			)}
+			{contextSuffix && <span class="text-slate-500 dark:text-slate-400">{contextSuffix}</span>}
+		</span>
+	)
+}

@@ -1,0 +1,18 @@
+---
+interface Props {
+	to: string;
+	label?: string;
+	auto?: boolean;
+}
+
+const { to, label = "destination", auto = true } = Astro.props;
+---
+
+{auto && <meta http-equiv="refresh" content={`0; url=${to}`} />}
+<div class="min-h-screen bg-slate-50 p-6 dark:bg-slate-900">
+  <div class="mx-auto max-w-4xl rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800">
+    <p class="text-sm text-slate-600 dark:text-slate-400">
+      {auto ? "Redirecting" : "Continue"} to <a class="text-purple-600 underline dark:text-purple-400" href={to}>{label}</a>.
+    </p>
+  </div>
+</div>

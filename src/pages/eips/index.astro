@@ -1,0 +1,464 @@
+---
+import { ListFilter, Search, X } from "@lucide/astro";
+import { layerBadgeClass, stageBadgeClass, stageLabel } from "@/domain/display";
+import {
+	getInclusionStage,
+	getLaymanTitle,
+	getProposalCode,
+	getProposalLayer,
+	isHeadlinerInAnyFork,
+	latestProposalUpdateTime,
+	proposals,
+	wasHeadlinerCandidateInAnyFork,
+} from "@/domain/proposals/proposal";
+import { getForkDisplayName } from "@/domain/upgrades/upgrade";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const rows = [...proposals].sort(
+	(a, b) => latestProposalUpdateTime(b) - latestProposalUpdateTime(a),
+);
+const statuses = Array.from(
+	new Set(proposals.map((proposal) => proposal.status)),
+).sort();
+const forks = Array.from(
+	new Set(
+		proposals.flatMap((proposal) =>
+			proposal.forkRelationships.map((fork) => fork.forkName),
+		),
+	),
+).sort();
+const layers = Array.from(
+	new Set(proposals.map(getProposalLayer).filter(Boolean)),
+).sort();
+---
+
+<BaseLayout title="EIP Directory - Forkcast" description="Browse all Ethereum Improvement Proposals tracked on Forkcast.">
+  <div class="min-h-screen bg-slate-50 p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100" data-eip-index-root>
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">EIP Directory</h1>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button
+              type="button"
+              data-open-eip-index-search
+              class="inline-flex h-10 w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/30 sm:w-72 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              aria-label="Search EIPs"
+            >
+              <span class="inline-flex min-w-0 items-center gap-2">
+                <Search class="h-4 w-4 shrink-0 text-slate-400" />
+                <span class="truncate">Search EIPs...</span>
+              </span>
+              <kbd class="hidden shrink-0 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 sm:block dark:border-slate-700 dark:bg-slate-900 dark:text-slate-500">⌘K</kbd>
+            </button>
+            <span id="eip-count" class="text-sm text-slate-500 dark:text-slate-400">{rows.length} EIPs</span>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+          <span class="inline-flex items-center gap-1 text-slate-500 dark:text-slate-400">
+            <ListFilter class="h-4 w-4" />
+            Filters
+          </span>
+          <select id="status-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All statuses</option>
+            {statuses.map((status) => <option value={status}>{status}</option>)}
+          </select>
+          <select id="fork-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All upgrades</option>
+            {forks.map((fork) => <option value={fork}>{getForkDisplayName(fork)}</option>)}
+            <option value="No Fork">No Fork</option>
+          </select>
+          <select id="layer-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All layers</option>
+            {layers.map((layer) => <option value={layer}>{layer}</option>)}
+          </select>
+          <select id="headliner-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All headliners</option>
+            <option value="selected">Selected headliners</option>
+            <option value="proposed">Proposed headliners</option>
+          </select>
+          <button id="clear-eip-filters" type="button" class="rounded-lg px-3 py-2 text-sm text-purple-600 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-500/10">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="hidden overflow-hidden rounded-lg border border-slate-200 bg-white md:block dark:border-slate-700 dark:bg-slate-800">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Proposal</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Title</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Upgrade</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Stage</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Status</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">Layer</th>
+              </tr>
+            </thead>
+            <tbody id="eip-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+              {
+                rows.map((proposal) => {
+                  const latestFork = proposal.forkRelationships.at(-1);
+                  const stage = latestFork ? getInclusionStage(proposal, latestFork.forkName) : "Unknown";
+                  const layer = getProposalLayer(proposal);
+                  const searchText = `${getProposalCode(proposal)} ${getLaymanTitle(proposal)} ${proposal.description}`.toLowerCase();
+                  const forkNames = proposal.forkRelationships.map((fork) => fork.forkName).join("|") || "No Fork";
+                  return (
+                    <tr
+                      class="eip-row transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30"
+                      data-search={searchText}
+                      data-status={proposal.status}
+                      data-forks={forkNames}
+                      data-layer={layer ?? ""}
+                      data-headliner={isHeadlinerInAnyFork(proposal) ? "selected" : wasHeadlinerCandidateInAnyFork(proposal) ? "proposed" : ""}
+                      data-code={getProposalCode(proposal)}
+                      data-title={getLaymanTitle(proposal)}
+                      data-description={proposal.laymanDescription || proposal.description}
+                      data-fork-display={latestFork ? getForkDisplayName(latestFork.forkName) : ""}
+                      data-stage={stage !== "Unknown" ? stageLabel(stage) : ""}
+                      data-href={`/eips/${proposal.id}`}
+                    >
+                      <td class="whitespace-nowrap px-4 py-3">
+                        <a href={`/eips/${proposal.id}`} data-astro-prefetch class="font-mono text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300">
+                          {getProposalCode(proposal)}
+                        </a>
+                      </td>
+                      <td class="max-w-md px-4 py-3">
+                        <a href={`/eips/${proposal.id}`} data-astro-prefetch class="line-clamp-2 text-sm font-medium text-slate-900 hover:text-purple-700 dark:text-slate-100 dark:hover:text-purple-300">
+                          {getLaymanTitle(proposal)}
+                        </a>
+                      </td>
+                      <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{latestFork ? getForkDisplayName(latestFork.forkName) : "—"}</td>
+                      <td class="px-4 py-3">
+                        {stage !== "Unknown" ? <span class={`rounded px-2 py-0.5 text-xs font-medium ${stageBadgeClass(stage)}`}>{stageLabel(stage)}</span> : <span class="text-sm text-slate-400">—</span>}
+                      </td>
+                      <td class="px-4 py-3">
+                        <span class="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300">{proposal.status}</span>
+                      </td>
+                      <td class="px-4 py-3">
+                        {layer ? <span class={`rounded px-2 py-0.5 text-xs font-medium ${layerBadgeClass(layer)}`}>{layer}</span> : <span class="text-sm text-slate-400">—</span>}
+                      </td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="space-y-3 md:hidden">
+        {
+          rows.map((proposal) => {
+            const latestFork = proposal.forkRelationships.at(-1);
+            const stage = latestFork ? getInclusionStage(proposal, latestFork.forkName) : "Unknown";
+            const layer = getProposalLayer(proposal);
+            const searchText = `${getProposalCode(proposal)} ${getLaymanTitle(proposal)} ${proposal.description}`.toLowerCase();
+            const forkNames = proposal.forkRelationships.map((fork) => fork.forkName).join("|") || "No Fork";
+            return (
+              <a
+                href={`/eips/${proposal.id}`}
+                data-astro-prefetch
+                class="eip-row block rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
+                data-search={searchText}
+                data-status={proposal.status}
+                data-forks={forkNames}
+                data-layer={layer ?? ""}
+                data-headliner={isHeadlinerInAnyFork(proposal) ? "selected" : wasHeadlinerCandidateInAnyFork(proposal) ? "proposed" : ""}
+                data-code={getProposalCode(proposal)}
+                data-title={getLaymanTitle(proposal)}
+                data-description={proposal.laymanDescription || proposal.description}
+                data-fork-display={latestFork ? getForkDisplayName(latestFork.forkName) : ""}
+                data-stage={stage !== "Unknown" ? stageLabel(stage) : ""}
+                data-href={`/eips/${proposal.id}`}
+              >
+                <div class="mb-2 flex flex-wrap items-center gap-2">
+                  <span class="font-mono text-sm font-medium text-purple-600 dark:text-purple-400">{getProposalCode(proposal)}</span>
+                  <span class="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300">{proposal.status}</span>
+                  {layer && <span class={`rounded px-2 py-0.5 text-xs font-medium ${layerBadgeClass(layer)}`}>{layer}</span>}
+                </div>
+                <h2 class="text-sm font-medium text-slate-900 dark:text-slate-100">{getLaymanTitle(proposal)}</h2>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {latestFork && <span class="rounded border border-slate-200 bg-slate-50/50 px-2 py-0.5 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-900/30 dark:text-slate-400">{getForkDisplayName(latestFork.forkName)}</span>}
+                  {stage !== "Unknown" && <span class={`rounded px-2 py-0.5 text-xs font-medium ${stageBadgeClass(stage)}`}>{stageLabel(stage)}</span>}
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+  <div id="eip-index-search-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="eip-index-search-title" aria-hidden="true">
+    <button type="button" data-close-eip-index-search class="absolute inset-0 h-full w-full cursor-default bg-slate-950/40 backdrop-blur-sm" aria-label="Close EIP search"></button>
+    <div class="relative mx-auto mt-20 flex max-h-[80vh] w-[calc(100%-2rem)] max-w-3xl flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl shadow-slate-900/20 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/40">
+      <div class="border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center gap-3 px-4 py-3">
+          <Search class="h-5 w-5 shrink-0 text-slate-400" />
+          <label id="eip-index-search-title" for="eip-index-modal-search" class="sr-only">Search EIPs</label>
+          <input id="eip-index-modal-search" type="search" autocomplete="off" placeholder="Search EIPs..." class="min-w-0 flex-1 bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100" />
+          <button type="button" data-close-eip-index-search class="rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Close EIP search">
+            <X class="h-5 w-5" />
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 px-4 pb-4">
+          <select id="eip-index-modal-fork-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All upgrades</option>
+            {forks.map((fork) => <option value={fork}>{getForkDisplayName(fork)}</option>)}
+            <option value="No Fork">No Fork</option>
+          </select>
+          <select id="eip-index-modal-status-filter" data-enhance-select class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800">
+            <option value="">All statuses</option>
+            {statuses.map((status) => <option value={status}>{status}</option>)}
+          </select>
+          <div id="eip-index-modal-layer-filter" class="flex items-center gap-1 border-l border-slate-200 pl-2 dark:border-slate-700">
+            <button type="button" data-eip-index-layer="" data-active="true" class="rounded-md px-2.5 py-1.5 text-xs font-medium transition data-[active=true]:bg-blue-50 data-[active=true]:text-blue-700 data-[active=false]:text-slate-600 data-[active=false]:hover:bg-slate-100 dark:data-[active=true]:bg-blue-900/30 dark:data-[active=true]:text-blue-300 dark:data-[active=false]:text-slate-300 dark:data-[active=false]:hover:bg-slate-800">All Layers</button>
+            {layers.map((layer) => (
+              <button type="button" data-eip-index-layer={layer} data-active="false" class="rounded-md px-2.5 py-1.5 text-xs font-medium transition data-[active=true]:bg-blue-50 data-[active=true]:text-blue-700 data-[active=false]:text-slate-600 data-[active=false]:hover:bg-slate-100 dark:data-[active=true]:bg-blue-900/30 dark:data-[active=true]:text-blue-300 dark:data-[active=false]:text-slate-300 dark:data-[active=false]:hover:bg-slate-800">{layer}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div id="eip-index-search-empty" class="p-8 text-center text-sm text-slate-500 dark:text-slate-400">Search EIPs or use filters to browse</div>
+      <div id="eip-index-search-results" class="max-h-[60vh] overflow-y-auto py-2"></div>
+      <div id="eip-index-search-footer" class="hidden border-t border-slate-200 px-4 py-2 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400"></div>
+    </div>
+  </div>
+
+  <script>
+    const setupEipIndex = () => {
+      const root = document.querySelector<HTMLElement>("[data-eip-index-root]");
+      if (!root || root.dataset.eipIndexBound === "true") return;
+      root.dataset.eipIndexBound = "true";
+
+      const controller = new AbortController();
+      const { signal } = controller;
+      document.addEventListener("astro:before-swap", () => controller.abort(), {
+        once: true,
+      });
+
+    const statusFilter = document.getElementById("status-filter") as HTMLSelectElement | null;
+    const forkFilter = document.getElementById("fork-filter") as HTMLSelectElement | null;
+    const layerFilter = document.getElementById("layer-filter") as HTMLSelectElement | null;
+    const headlinerFilter = document.getElementById("headliner-filter") as HTMLSelectElement | null;
+    const clear = document.getElementById("clear-eip-filters");
+    const count = document.getElementById("eip-count");
+    const rows = Array.from(document.querySelectorAll<HTMLElement>(".eip-row"));
+
+    const applyFilters = () => {
+      const status = statusFilter?.value ?? "";
+      const fork = forkFilter?.value ?? "";
+      const layer = layerFilter?.value ?? "";
+      const headliner = headlinerFilter?.value ?? "";
+      const visibleHrefs = new Set<string>();
+
+      for (const row of rows) {
+        const matches =
+          (!status || row.dataset.status === status) &&
+          (!fork || row.dataset.forks?.split("|").includes(fork)) &&
+          (!layer || row.dataset.layer === layer) &&
+          (!headliner || row.dataset.headliner === headliner);
+        row.hidden = !matches;
+        if (matches && row.dataset.href) visibleHrefs.add(row.dataset.href);
+      }
+
+      const visible = visibleHrefs.size;
+      if (count) count.textContent = `${visible} ${visible === 1 ? "EIP" : "EIPs"}`;
+    };
+
+    [statusFilter, forkFilter, layerFilter, headlinerFilter].forEach((control) =>
+      control?.addEventListener("input", applyFilters),
+    );
+
+    clear?.addEventListener("click", () => {
+      if (statusFilter) statusFilter.value = "";
+      if (forkFilter) forkFilter.value = "";
+      if (layerFilter) layerFilter.value = "";
+      if (headlinerFilter) headlinerFilter.value = "";
+      applyFilters();
+    });
+
+    const modal = document.getElementById("eip-index-search-modal");
+    const modalSearch = document.getElementById("eip-index-modal-search") as HTMLInputElement | null;
+    const modalFork = document.getElementById("eip-index-modal-fork-filter") as HTMLSelectElement | null;
+    const modalStatus = document.getElementById("eip-index-modal-status-filter") as HTMLSelectElement | null;
+    const modalResults = document.getElementById("eip-index-search-results");
+    const modalEmpty = document.getElementById("eip-index-search-empty");
+    const modalFooter = document.getElementById("eip-index-search-footer");
+    const openSearchButtons = Array.from(document.querySelectorAll<HTMLElement>("[data-open-eip-index-search]"));
+    const closeSearchButtons = Array.from(document.querySelectorAll<HTMLElement>("[data-close-eip-index-search]"));
+    const modalLayerButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-eip-index-layer]"));
+    let activeModalLayer = "";
+    let selectedResultIndex = 0;
+    let renderedResults: HTMLAnchorElement[] = [];
+
+    const directoryRows = Array.from(document.querySelectorAll<HTMLElement>("#eip-table-body .eip-row"));
+    const searchDocuments = directoryRows.map((row) => ({
+      href: row.dataset.href ?? "",
+      code: row.dataset.code ?? "",
+      title: row.dataset.title ?? "",
+      description: row.dataset.description ?? "",
+      status: row.dataset.status ?? "",
+      forks: row.dataset.forks?.split("|") ?? [],
+      forkDisplay: row.dataset.forkDisplay ?? "",
+      stage: row.dataset.stage ?? "",
+      layer: row.dataset.layer ?? "",
+      search: `${row.dataset.search ?? ""} ${row.dataset.code ?? ""}`.toLowerCase(),
+    }));
+
+    const isModalOpen = () => Boolean(modal && !modal.classList.contains("hidden"));
+
+    const openModal = () => {
+      if (!modal || !modalSearch) return;
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      window.setTimeout(() => modalSearch.focus(), 0);
+      renderModalResults();
+    };
+
+    const closeModal = () => {
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    const appendText = (parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text: string, className: string) => {
+      const child = document.createElement(tagName);
+      child.textContent = text;
+      child.className = className;
+      parent.append(child);
+      return child;
+    };
+
+    const renderModalResults = () => {
+      if (!modalResults || !modalEmpty || !modalFooter) return;
+      const query = modalSearch?.value.trim().toLowerCase() ?? "";
+      const fork = modalFork?.value ?? "";
+      const status = modalStatus?.value ?? "";
+      const hasFilter = Boolean(query || fork || status || activeModalLayer);
+      const matches = searchDocuments
+        .filter((document) => {
+          const queryMatch = !query || document.search.includes(query) || document.title.toLowerCase().includes(query);
+          const forkMatch = !fork || document.forks.includes(fork);
+          const statusMatch = !status || document.status === status;
+          const layerMatch = !activeModalLayer || document.layer === activeModalLayer;
+          return queryMatch && forkMatch && statusMatch && layerMatch;
+        })
+        .slice(0, 50);
+
+      selectedResultIndex = Math.min(selectedResultIndex, Math.max(matches.length - 1, 0));
+      renderedResults = [];
+      modalResults.replaceChildren();
+
+      if (!hasFilter) {
+        modalEmpty.textContent = "Search EIPs or use filters to browse";
+        modalEmpty.hidden = false;
+        modalFooter.classList.add("hidden");
+        return;
+      }
+
+      if (matches.length === 0) {
+        modalEmpty.textContent = "No EIPs found";
+        modalEmpty.hidden = false;
+        modalFooter.classList.add("hidden");
+        return;
+      }
+
+      modalEmpty.hidden = true;
+      const fragment = document.createDocumentFragment();
+      for (const [index, result] of matches.entries()) {
+        const link = document.createElement("a");
+        link.href = result.href;
+        link.setAttribute("data-astro-prefetch", "");
+        link.className = `block px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/70 ${index === selectedResultIndex ? "bg-slate-50 dark:bg-slate-800/70" : ""}`;
+        const row = document.createElement("div");
+        row.className = "flex items-start gap-3";
+        appendText(row, "span", result.code, "flex-shrink-0 rounded bg-purple-50 px-2 py-1 font-mono text-xs font-medium text-purple-600 dark:bg-purple-900/30 dark:text-purple-300");
+        const body = document.createElement("div");
+        body.className = "min-w-0 flex-1";
+        appendText(body, "div", result.title, "mb-1 line-clamp-1 text-sm font-medium text-slate-900 dark:text-slate-100");
+        appendText(body, "p", result.description, "mb-2 line-clamp-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400");
+        const meta = document.createElement("div");
+        meta.className = "flex flex-wrap items-center gap-2";
+        if (result.forkDisplay) appendText(meta, "span", result.forkDisplay, "rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600 dark:bg-slate-700 dark:text-slate-400");
+        if (result.stage) appendText(meta, "span", result.stage, "rounded bg-purple-50 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300");
+        if (result.layer) appendText(meta, "span", result.layer, "rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-600 dark:bg-blue-900/30 dark:text-blue-400");
+        body.append(meta);
+        row.append(body);
+        link.append(row);
+        link.addEventListener("mouseenter", () => {
+          selectedResultIndex = index;
+          renderModalResults();
+        });
+        renderedResults.push(link);
+        fragment.append(link);
+      }
+      modalResults.append(fragment);
+      modalFooter.textContent = `${matches.length} result${matches.length === 1 ? "" : "s"} · Up/Down Navigate · Enter Open · Esc Close`;
+      modalFooter.classList.remove("hidden");
+    };
+
+    for (const button of openSearchButtons) button.addEventListener("click", openModal);
+    for (const button of closeSearchButtons) button.addEventListener("click", closeModal);
+    modalSearch?.addEventListener("input", () => {
+      selectedResultIndex = 0;
+      renderModalResults();
+    });
+    modalFork?.addEventListener("input", () => {
+      selectedResultIndex = 0;
+      renderModalResults();
+    });
+    modalStatus?.addEventListener("input", () => {
+      selectedResultIndex = 0;
+      renderModalResults();
+    });
+    for (const button of modalLayerButtons) {
+      button.addEventListener("click", () => {
+        activeModalLayer = button.dataset.eipIndexLayer ?? "";
+        selectedResultIndex = 0;
+        for (const candidate of modalLayerButtons) {
+          candidate.dataset.active = String(candidate === button);
+        }
+        renderModalResults();
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        openModal();
+        modalSearch?.select();
+        return;
+      }
+
+      if (!isModalOpen()) return;
+      if (event.key === "Escape") {
+        closeModal();
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        selectedResultIndex = Math.min(selectedResultIndex + 1, renderedResults.length - 1);
+        renderModalResults();
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        selectedResultIndex = Math.max(selectedResultIndex - 1, 0);
+        renderModalResults();
+        return;
+      }
+      if (event.key === "Enter" && renderedResults[selectedResultIndex]) {
+        event.preventDefault();
+        renderedResults[selectedResultIndex].click();
+      }
+    }, { signal });
+    };
+
+    setupEipIndex();
+    document.addEventListener("astro:page-load", setupEipIndex);
+  </script>
+</BaseLayout>

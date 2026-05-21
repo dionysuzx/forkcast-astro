@@ -1,0 +1,409 @@
+{
+  "generatedAt": "2026-05-09T17:00:51.331Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "methodology": {
+    "runner": "Playwright using local Chrome against the production static preview",
+    "cache": "Fresh browser context per route",
+    "viewport": "1440x1100",
+    "thirdPartyMedia": "Blocked youtube/google media and iframe hosts; counts are recorded separately.",
+    "sizeSource": "HTTP Content-Length headers grouped by browser resource type and URL/content-type heuristics."
+  },
+  "routes": [
+    {
+      "route": "/",
+      "finalPath": "/",
+      "status": 200,
+      "requestCount": 7,
+      "blockedThirdPartyMediaCount": 0,
+      "totalTransferredBytes": 1641684,
+      "transferredBytes": {
+        "html": 3779,
+        "javascript": 1317906,
+        "css": 152615,
+        "dataApi": 1983,
+        "imageFont": 165401,
+        "other": 0,
+        "total": 1641684
+      },
+      "javascriptBytes": 1317906,
+      "cssBytes": 152615,
+      "htmlBytes": 3779,
+      "dataApiBytes": 1983,
+      "imageFontBytes": 165401,
+      "rawHtmlTextLength": 152,
+      "renderedBodyTextLength": 2664,
+      "renderedDomBytes": 39482,
+      "title": "Forkcast - Ethereum Upgrade Tracker",
+      "h1": [
+        "Ethereum Upgrade Tracker"
+      ],
+      "notableRuntimeFetches": [
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-05-07_236/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1983
+        }
+      ],
+      "failedRequests": [],
+      "durationMs": 894
+    },
+    {
+      "route": "/agenda",
+      "finalPath": "/agenda",
+      "status": 200,
+      "requestCount": 24,
+      "blockedThirdPartyMediaCount": 0,
+      "totalTransferredBytes": 1671365,
+      "transferredBytes": {
+        "html": 3779,
+        "javascript": 1317906,
+        "css": 152615,
+        "dataApi": 60522,
+        "imageFont": 136543,
+        "other": 0,
+        "total": 1671365
+      },
+      "javascriptBytes": 1317906,
+      "cssBytes": 152615,
+      "htmlBytes": 3779,
+      "dataApiBytes": 60522,
+      "imageFontBytes": 136543,
+      "rawHtmlTextLength": 152,
+      "renderedBodyTextLength": 10876,
+      "renderedDomBytes": 74126,
+      "title": "AllCoreDevs - Execution Agenda Planner - Forkcast",
+      "h1": [
+        "Agenda Planner for ACDE"
+      ],
+      "notableRuntimeFetches": [
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/plan/open_action_items.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 4331
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/plan/deferred_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1553
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/plan/agenda_suggestions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3338
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/plan/eip_threads.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 11762
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-05-07_236/tldr.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3503
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-23_235/tldr.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 2952
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-09_234/tldr.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3826
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-26_233/tldr.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3090
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-12_232/tldr.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3555
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-09_234/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 756
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-05-07_236/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1983
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-26_233/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 891
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-12_232/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 647
+        },
+        {
+          "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-23_235/key_decisions.json",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1046
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues?state=open&per_page=20",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 7871
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2038/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3194
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2037/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1880
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2028/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 2467
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/1997/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1877
+        }
+      ],
+      "failedRequests": [],
+      "durationMs": 980
+    },
+    {
+      "route": "/calls",
+      "finalPath": "/calls",
+      "status": 200,
+      "requestCount": 10,
+      "blockedThirdPartyMediaCount": 0,
+      "totalTransferredBytes": 1628132,
+      "transferredBytes": {
+        "html": 3779,
+        "javascript": 1317906,
+        "css": 152615,
+        "dataApi": 17289,
+        "imageFont": 136543,
+        "other": 0,
+        "total": 1628132
+      },
+      "javascriptBytes": 1317906,
+      "cssBytes": 152615,
+      "htmlBytes": 3779,
+      "dataApiBytes": 17289,
+      "imageFontBytes": 136543,
+      "rawHtmlTextLength": 152,
+      "renderedBodyTextLength": 9178,
+      "renderedDomBytes": 225355,
+      "title": "Forkcast - Ethereum Upgrade Tracker",
+      "h1": [
+        "Protocol Calendar"
+      ],
+      "notableRuntimeFetches": [
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues?state=open&per_page=20",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 7871
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2038/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 3194
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2028/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 2467
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/2037/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1880
+        },
+        {
+          "url": "https://api.github.com/repos/ethereum/pm/issues/1997/comments",
+          "resourceType": "fetch",
+          "status": 200,
+          "bytes": 1877
+        }
+      ],
+      "failedRequests": [],
+      "durationMs": 986
+    }
+  ],
+  "summary": {
+    "routeCount": 3,
+    "totals": {
+      "requestCount": 41,
+      "blockedThirdPartyMediaCount": 0,
+      "totalTransferredBytes": 4941181,
+      "javascriptBytes": 3953718,
+      "cssBytes": 457845,
+      "htmlBytes": 11337,
+      "dataApiBytes": 79794,
+      "imageFontBytes": 438487,
+      "rawHtmlTextLength": 456,
+      "renderedBodyTextLength": 22718
+    },
+    "average": {
+      "requestCount": 14,
+      "blockedThirdPartyMediaCount": 0,
+      "totalTransferredBytes": 1647060,
+      "javascriptBytes": 1317906,
+      "cssBytes": 152615,
+      "htmlBytes": 3779,
+      "dataApiBytes": 26598,
+      "imageFontBytes": 146162,
+      "rawHtmlTextLength": 152,
+      "renderedBodyTextLength": 7573
+    },
+    "largestTotalRoutes": [
+      {
+        "route": "/agenda",
+        "value": 1671365
+      },
+      {
+        "route": "/",
+        "value": 1641684
+      },
+      {
+        "route": "/calls",
+        "value": 1628132
+      }
+    ],
+    "largestDataRoutes": [
+      {
+        "route": "/agenda",
+        "value": 60522
+      },
+      {
+        "route": "/calls",
+        "value": 17289
+      },
+      {
+        "route": "/",
+        "value": 1983
+      }
+    ],
+    "largestRenderedDomRoutes": [
+      {
+        "route": "/calls",
+        "value": 225355
+      },
+      {
+        "route": "/agenda",
+        "value": 74126
+      },
+      {
+        "route": "/",
+        "value": 39482
+      }
+    ],
+    "commonRuntimeFetches": [
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-05-07_236/key_decisions.json",
+        "count": 2
+      },
+      {
+        "url": "https://api.github.com/repos/ethereum/pm/issues",
+        "count": 2
+      },
+      {
+        "url": "https://api.github.com/repos/ethereum/pm/issues/2038/comments",
+        "count": 2
+      },
+      {
+        "url": "https://api.github.com/repos/ethereum/pm/issues/2037/comments",
+        "count": 2
+      },
+      {
+        "url": "https://api.github.com/repos/ethereum/pm/issues/2028/comments",
+        "count": 2
+      },
+      {
+        "url": "https://api.github.com/repos/ethereum/pm/issues/1997/comments",
+        "count": 2
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/plan/open_action_items.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/plan/deferred_decisions.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/plan/agenda_suggestions.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/plan/eip_threads.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-05-07_236/tldr.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-23_235/tldr.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-09_234/tldr.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-26_233/tldr.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-12_232/tldr.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-09_234/key_decisions.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-26_233/key_decisions.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-03-12_232/key_decisions.json",
+        "count": 1
+      },
+      {
+        "url": "http://127.0.0.1:4173/artifacts/acde/2026-04-23_235/key_decisions.json",
+        "count": 1
+      }
+    ]
+  }
+}

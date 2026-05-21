@@ -1,0 +1,361 @@
+---
+import {
+	ChevronDown,
+	ExternalLink,
+	Menu,
+	Moon,
+	Search,
+	Sun,
+	X,
+} from "@lucide/astro";
+import Logo from "./Logo.astro";
+
+interface Props {
+	wide?: boolean;
+	showCallSearch?: boolean;
+}
+
+const { wide = false, showCallSearch = false } = Astro.props;
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const navMaxWidth = wide ? "max-w-[1800px]" : "max-w-4xl";
+const horizontalPadding = wide ? "px-4 sm:px-6 xl:px-8 2xl:px-10" : "px-6";
+
+const isActive = (href: string) =>
+	pathname === href || pathname.startsWith(`${href}/`);
+const upgradesActive =
+	pathname === "/upgrades" || pathname.startsWith("/upgrade/");
+
+const navItems = [
+	{ href: "/eips", label: "EIPs" },
+	{ href: "/calls", label: "Calls" },
+	{ href: "/decisions", label: "Decisions" },
+	{ href: "/schedule", label: "Schedule" },
+	{ href: "/devnets", label: "Devnets" },
+];
+
+const upgradeItems = [
+	{ href: "/upgrade/glamsterdam", label: "Glamsterdam" },
+	{ href: "/upgrade/hegota", label: "Hegotá" },
+	{ href: "/upgrades", label: "View all upgrades", muted: true },
+];
+---
+
+<div
+  id="announcement-banner"
+  class="border-b border-purple-200 bg-purple-50 px-6 dark:border-purple-700 dark:bg-slate-800"
+  data-storage-key="epf7-banner-dismissed"
+>
+  <div class="mx-auto max-w-4xl py-3">
+    <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 md:flex md:items-center">
+      <span class="min-w-0 text-sm font-medium leading-5 text-slate-900 md:flex-1 dark:text-slate-100">
+        Ethereum Protocol Fellowship (EPF) Cohort 7 — Applications open until May 13
+      </span>
+      <div class="col-start-1 row-start-2 flex shrink-0 items-center gap-2 md:ml-auto">
+        <a
+          href="https://blog.ethereum.org/2026/04/30/epf-7"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
+        >
+          Learn more
+          <ExternalLink class="h-3 w-3" aria-hidden="true" />
+        </a>
+      </div>
+      <button
+        type="button"
+        id="announcement-dismiss"
+        class="col-start-2 row-start-1 flex-shrink-0 rounded p-1 text-slate-600 transition-colors hover:bg-purple-200/60 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+        aria-label="Dismiss banner"
+      >
+        <X class="h-4 w-4" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<header
+  class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/90"
+  data-site-header
+>
+  <div class={horizontalPadding}>
+    <nav class={`relative mx-auto flex h-14 ${navMaxWidth} items-center justify-between gap-4`}>
+      <Logo size="sm" />
+
+      <div class={`${wide ? "hidden lg:flex" : "hidden md:flex"} absolute left-1/2 top-1/2 items-center gap-1 -translate-x-1/2 -translate-y-1/2`}>
+        <div class="group relative" data-upgrades-menu>
+          <button
+            type="button"
+            data-upgrades-menu-button
+            aria-expanded="false"
+            class={`flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              upgradesActive
+                ? "text-purple-700 dark:text-purple-300"
+                : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+            }`}
+          >
+            Upgrades
+            <ChevronDown data-upgrades-menu-chevron class="h-3.5 w-3.5 transition-transform" aria-hidden="true" />
+          </button>
+          <div data-upgrades-menu-panel class="invisible absolute left-0 top-full z-40 w-44 pt-2 opacity-0 transition-opacity data-[open=true]:visible data-[open=true]:opacity-100">
+            <div class="flex flex-col gap-1 rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30">
+              {
+                upgradeItems.map((item) => (
+                  <a
+                    href={item.href}
+                    data-astro-prefetch
+                    class={`block rounded-md px-3 py-2 text-sm transition-colors ${
+                      isActive(item.href)
+                        ? "bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-200"
+                        : item.muted
+                          ? "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-white"
+                          : "text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-slate-800/80 dark:hover:text-white"
+                    }`}
+                  >
+                    <span class={item.muted ? "font-medium" : "font-semibold"}>{item.label}</span>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              data-astro-prefetch
+              class={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                isActive(item.href)
+                  ? "text-purple-700 dark:text-purple-300"
+                  : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+              }`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="flex items-center gap-2">
+        {
+          showCallSearch && (
+            <>
+              <a
+                href="/calls"
+                data-astro-prefetch
+                class="whitespace-nowrap text-sm text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+              >
+                ← All Calls
+              </a>
+              <a
+                href="#call-search"
+                data-open-call-search
+                class="rounded-lg bg-slate-100 p-2 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+                aria-label="Search this call"
+                title="Search this call"
+              >
+                <Search class="h-5 w-5 text-slate-700 dark:text-slate-300" />
+              </a>
+            </>
+          )
+        }
+        <button
+          type="button"
+          id="theme-toggle"
+          class="rounded-lg bg-slate-100 p-2 text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+          aria-label="Toggle theme"
+        >
+          <Sun class="hidden h-5 w-5 dark:block" />
+          <Moon class="h-5 w-5 dark:hidden" />
+        </button>
+        <button
+          type="button"
+          id="mobile-menu-toggle"
+          class={`${wide ? "lg:hidden" : "md:hidden"} rounded-md p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800`}
+          aria-label="Toggle navigation"
+          aria-expanded="false"
+        >
+          <Menu class="h-5 w-5" />
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class={`${wide ? "lg:hidden" : "md:hidden"} hidden border-t border-slate-200 bg-white ${horizontalPadding} dark:border-slate-700 dark:bg-slate-900`}
+  >
+    <div class={`mx-auto ${navMaxWidth} py-3`}>
+      <div class="px-1 py-2 text-sm text-slate-700 dark:text-slate-200">Upgrades</div>
+      <div class="mb-3 ml-2 space-y-1 border-l border-slate-200 pl-3 dark:border-slate-700">
+        {
+          upgradeItems.map((item) => (
+            <a
+              href={item.href}
+              data-astro-prefetch
+              class={`block rounded-md px-2 py-2 text-sm transition-colors ${
+                isActive(item.href)
+                  ? "font-medium text-purple-700 dark:text-purple-300"
+                  : "text-slate-700 dark:text-slate-200"
+              }`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            data-astro-prefetch
+            class={`block px-1 py-2 text-sm ${
+              isActive(item.href)
+                ? "font-medium text-purple-700 dark:text-purple-300"
+                : "text-slate-700 dark:text-slate-200"
+            }`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>
+
+<script>
+  type UpgradesMenuMode = "hover" | "click" | null;
+
+  const setupSiteHeader = () => {
+    const header = document.querySelector<HTMLElement>("[data-site-header]");
+    if (!header || header.dataset.siteHeaderBound === "true") return;
+    header.dataset.siteHeaderBound = "true";
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    document.addEventListener("astro:before-swap", () => controller.abort(), {
+      once: true,
+    });
+
+    const banner = document.getElementById("announcement-banner");
+    const dismiss = document.getElementById("announcement-dismiss");
+    const storageKey = banner?.dataset.storageKey;
+    try {
+      if (banner && storageKey && localStorage.getItem(storageKey) === "true") {
+        document.documentElement.dataset.announcementBannerDismissed = "true";
+        banner.hidden = true;
+      }
+    } catch {
+      // Keep the banner visible when storage is unavailable.
+    }
+    dismiss?.addEventListener(
+      "click",
+      () => {
+        if (banner && storageKey) {
+          banner.hidden = true;
+          document.documentElement.dataset.announcementBannerDismissed = "true";
+          try {
+            localStorage.setItem(storageKey, "true");
+          } catch {
+            // Ignore storage failures; the current page still reflects the dismissal.
+          }
+        }
+      },
+      { signal },
+    );
+
+    header.querySelector<HTMLButtonElement>("#theme-toggle")?.addEventListener(
+      "click",
+      () => {
+        const root = document.documentElement;
+        const nextTheme = root.classList.contains("dark") ? "light" : "dark";
+        root.classList.toggle("dark", nextTheme === "dark");
+        root.style.colorScheme = nextTheme;
+        try {
+          localStorage.setItem("theme", nextTheme);
+        } catch {
+          // Ignore storage failures; the current page still reflects the theme.
+        }
+      },
+      { signal },
+    );
+
+    const menuButton = header.querySelector<HTMLButtonElement>("#mobile-menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+    menuButton?.addEventListener(
+      "click",
+      () => {
+        const nextOpen = menu?.classList.toggle("hidden") === false;
+        menuButton.setAttribute("aria-expanded", String(nextOpen));
+      },
+      { signal },
+    );
+
+    const upgradesMenu = header.querySelector<HTMLElement>("[data-upgrades-menu]");
+    const upgradesButton = upgradesMenu?.querySelector<HTMLButtonElement>("[data-upgrades-menu-button]");
+    const upgradesPanel = upgradesMenu?.querySelector<HTMLElement>("[data-upgrades-menu-panel]");
+    const upgradesChevron = upgradesMenu?.querySelector<HTMLElement>("[data-upgrades-menu-chevron]");
+    let upgradesMenuPointerInside = false;
+    let upgradesMenuMode: UpgradesMenuMode = null;
+
+    const setUpgradesMenuOpen = (open: boolean, mode: UpgradesMenuMode = null) => {
+      if (!upgradesButton || !upgradesPanel) return;
+      upgradesMenuMode = open ? mode : null;
+      upgradesButton.setAttribute("aria-expanded", String(open));
+      upgradesPanel.dataset.open = String(open);
+      upgradesChevron?.classList.toggle("rotate-180", open);
+    };
+
+    upgradesButton?.addEventListener(
+      "click",
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setUpgradesMenuOpen(
+          upgradesMenuMode !== "click",
+          upgradesMenuMode === "click" ? null : "click",
+        );
+      },
+      { signal },
+    );
+
+    upgradesMenu?.addEventListener(
+      "pointerenter",
+      () => {
+        upgradesMenuPointerInside = true;
+        if (upgradesMenuMode !== "click") setUpgradesMenuOpen(true, "hover");
+      },
+      { signal },
+    );
+    upgradesMenu?.addEventListener(
+      "pointerleave",
+      () => {
+        upgradesMenuPointerInside = false;
+        window.setTimeout(() => {
+          if (!upgradesMenuPointerInside && upgradesMenuMode === "hover") {
+            setUpgradesMenuOpen(false);
+          }
+        }, 120);
+      },
+      { signal },
+    );
+
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.target instanceof Node && upgradesMenu?.contains(event.target)) return;
+        setUpgradesMenuOpen(false);
+      },
+      { signal },
+    );
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") setUpgradesMenuOpen(false);
+      },
+      { signal },
+    );
+  };
+
+  setupSiteHeader();
+  document.addEventListener("astro:page-load", setupSiteHeader);
+</script>

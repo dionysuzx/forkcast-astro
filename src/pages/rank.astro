@@ -1,0 +1,15 @@
+---
+import { HeadlinerTierMaker } from "@/components/ranking/HeadlinerTierMaker";
+import { hegotaHeadlinerRankables } from "@/domain/ranking/headliner-ranking";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const proposals = hegotaHeadlinerRankables();
+---
+
+<BaseLayout
+  title="Hegota Headliner Tier Maker - Forkcast"
+  description="Create and share a Hegota headliner proposal tier ranking."
+  wide
+>
+  <HeadlinerTierMaker proposals={proposals} client:load />
+</BaseLayout>

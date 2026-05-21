@@ -1,0 +1,2966 @@
+{
+	"source": "https://github.com/ethsteel/pm/tree/main/complexity_assessments/EIPs",
+	"retrievedAt": "2026-05-09",
+	"assessments": [
+		{
+			"eipNumber": 2780,
+			"totalScore": 13,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "Affects the intrinsic gas cost of every transaction, which could break many pre-existing tests."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 1,
+					"notes": "Minimal testing required due to type-3 transaction changing its intrinsic gas cost too."
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Potentially a many of the pre-existing tests that require exact gas costs need rework. Although normal tests that don't rely on exact gas costs might not necessarily be affected since the cost is going down instead of up."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Mainly due to the logic introduced that affects the intrinsic gas cost, and the new-account surcharge cost calculation, all combinations need to be tested."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 3,
+					"notes": "Modifies the intrinsic transaction gas cost of all pre-existing transaction types. This will potentially break previous tests which will need to be updated and re-evaluated, e.g. intrinsic gas cost 7702 tests now have to be updated depending on whether they target a `GAS_NEW_ACCOUNT` account or not."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 1,
+					"notes": "Does not pose a performance risk but rather affects how we calculate worst case scenarios because more transactions (potentially) fit in each block."
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-2780.md"
+		},
+		{
+			"eipNumber": 5920,
+			"totalScore": 8,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 3,
+					"notes": "`PAY` with `value` 0 (e.g. in STATIC context), or `address` zero-address, or `address` being `self` are all edge cases that need to be tested."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 3,
+					"notes": "Adds new opcode `PAY` which aims to be a UX improvement."
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "There needs to be some edge-case testing performed."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-5920.md"
+		},
+		{
+			"eipNumber": 7610,
+			"totalScore": 7,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Some static tests might break as noted by Pawel in the magicians thread."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 2,
+					"notes": "EELS might be updated to handle this EIP."
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 2,
+					"notes": "The EIP is an even stricter version of `684`, adding the rule that the storage also has to be empty."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0,
+					"notes": "The EIP helps improve security."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7610.md"
+		},
+		{
+			"eipNumber": 7668,
+			"totalScore": 2,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 1,
+					"notes": "Block header field value is changed"
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 1,
+					"notes": "`eth_getLogs` gets much slower - clients will have to check every single transaction receipt instead of just checking matching receipts/blocks"
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7668.md"
+		},
+		{
+			"eipNumber": 7708,
+			"totalScore": 9,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 1,
+					"notes": "All tests will now issue Eth-transfer logs, which might be a non-issue but does touch basically every single test."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 1,
+					"notes": "Rather than a change to the T8N interface, we have to enhance execution-specs testing framework to verify the logs returned from T8N, because at the moment we just pass along the log list that was received from T8N to the test to be compared against the clients."
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "All 0->1 boundaries have to be tested in all possible scenarios where Eth is transfered."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 2,
+					"notes": "Some system contracts do receive/transfer Eth, and while existing tests might be sufficient, we need to double check that this change does not break current behavior (particularly the beacon deposit contract)."
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 1,
+					"notes": "*CALL opcodes and SELFDESTRUCT/SENDALL behavior is slightly modified."
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 2,
+					"notes": "Test worst-case scenario of a transaction/block transfering Eth in multiple ways."
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7708.md"
+		},
+		{
+			"eipNumber": 7745,
+			"totalScore": 20,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 2,
+					"notes": "The framework needs to be updated to handle the proposed new lookup index data structure."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 2,
+					"notes": "The t8n might also have to be adjusted."
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 2,
+					"notes": "It is unclear how computationally-expensive it is to mine collisions in the proposed lookup index data structure and which performance impact such collisions would have in practice."
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 3,
+					"notes": "The `logs_bloom` header field must be replaced with `log_index_root`."
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 3,
+					"notes": "The `logs_bloom` header field must be replaced with `log_index_root`."
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 3,
+					"notes": "The `logs_bloom` header field must be replaced with `log_index_root` and the proposed logic must be implemented to calculate that field."
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 2,
+					"notes": "`LOG` performance might be negatively impacted which is why the author predicts a gas increase of this opcode class. It is known that it is possible to mine collisions in the proposed lookup index data structure and it is unclear, until benchmarked, which performance impact such collisions would have in practice."
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "Requires extensive testing in testnets and devnets to avoid consensus issues."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 1,
+					"notes": "`EIP-7668` tries to remove the bloom filter, and this EIP tries to replace it with something else."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7745.md"
+		},
+		{
+			"eipNumber": 7778,
+			"totalScore": 10,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "This has the potential to affect any tests near the block gas limit that contain refunds."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 1
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "All refunding opcodes need to be tested near the block gas limit."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 3
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "Technically block validity, but a transaction that could be included previously would make a block invalid after this EIP"
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7778.md"
+		},
+		{
+			"eipNumber": 7793,
+			"totalScore": 21,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 3,
+					"notes": "Transaction validity now also depends on slot/index."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 3,
+					"notes": "Adds new opcode `TXINDEX`."
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 3,
+					"notes": "Introduces new `2728` tx type called 'conditional transactions'."
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 6,
+					"notes": "Transaction validity now also depends on slot/index. Added double weight for this reason."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 6,
+					"notes": "Transaction validity now also depends on slot/index, this has not done before and can potentially lead to consensus issues due to the overall complexity this EIP brings, therefore double weight added."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7793.md"
+		},
+		{
+			"eipNumber": 7805,
+			"totalScore": 15,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 1,
+					"notes": "\"After all of the transactions in the payload have been executed, we check whether any transaction from ILs, that is not already present in the payload, could be validly included...\". Additionally, there is further validation for each Transaction in the IL"
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 2,
+					"notes": "new field, new mechanism for tx validation, new error"
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Many boundary/edge cases to test, but standard checks"
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 3,
+					"notes": "2 new engine apis included, 1 modified"
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 2,
+					"notes": "Need to validate each transation in the IL, but limited in scope and straightforward checks"
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 2,
+					"notes": "Each transaction not in block requires state access, adding latency to block validation time"
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "Consensus-critical validations, new economic incentives"
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 1,
+					"notes": "Interacts with AA"
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7805.md"
+		},
+		{
+			"eipNumber": 7843,
+			"totalScore": 7,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 1,
+					"notes": "new field, `slot_number` will need to be added"
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 1,
+					"notes": "Minimal, but need to check 0, and `uint64` big endian"
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 1,
+					"notes": "new field, `slot_number` is passed in the engine API"
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 1,
+					"notes": "New opcode added: `SLOTNUM`"
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 3
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7843.md"
+		},
+		{
+			"eipNumber": 7872,
+			"totalScore": 0,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0,
+					"notes": "This EIP helps avoid a performance risk when your bandwidth is limited."
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7872.md"
+		},
+		{
+			"eipNumber": 7903,
+			"totalScore": 5,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0,
+					"notes": "The change is backwards-compatible."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "A transaction that previously would be invalid might be valid now."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 1,
+					"notes": "There needs to be more benchmarking work done to compare performance of different clients under various large initcode scenarios."
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 3,
+					"notes": "The proposed EIP is outdated in the sense that it conflicts with 7825 which was introduced in Fusaka. Even older EIPs like pectra's 7623 do something similar."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7903.md"
+		},
+		{
+			"eipNumber": 7904,
+			"totalScore": 15,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "Repricing of dozens of opcodes"
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Almost all of the contract tests will have different gas consumption"
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Both the block gas limit and memory expansion tests would be affected"
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 3,
+					"notes": "Reduce gas costs will significantly increase operations per block"
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "Potential DoS vectors and not backwards compatible requiring a hardfork"
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 2,
+					"notes": "[EIP-7790](https://eips.ethereum.org/EIPS/eip-7790) Block Gas Limit"
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7904.md"
+		},
+		{
+			"eipNumber": 7907,
+			"totalScore": 12,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "New excess code gas (2 gas/word for code >24KB) on cold access. Interacts with EIP-2929 cold/warm tracking. Affects tests measuring exact gas."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 2,
+					"notes": "Gas calculation tests need updates. Initcode boundary tests at old 48KB limit affected."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Multiple boundaries (24KB, 64KB, 128KB thresholds), cold/warm interaction with excess cost, empty code always warm."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0,
+					"notes": "Gas costs change for 6 opcodes but behavior unchanged. Per anchor definition, gas changes don't count as behavior modification."
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0,
+					"notes": "Account state encoding changes but this anchor covers tx/block/interface encoding, not internal state."
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "Initcode limit increases from 48KB to 128KB. Existing valid initcode remains valid."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 2,
+					"notes": "64KB contracts = 2.67x more bytecode to load, increased JUMPDEST analysis time, larger Merkle proofs. Code loading can be benchmarked in isolation but real-world impact depends on block composition."
+				},
+				{
+					"name": "Security risks",
+					"score": 1,
+					"notes": "EIP-170's 24KB limit was a DoS mitigation - now relaxed. The 2 gas/word pricing must accurately reflect resource costs; if wrong, enables cheaper DoS than expected. May require validation of gas pricing against actual resource consumption."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 1,
+					"notes": "Depends on EIP-2929 cold/warm tracking. Modifies EIP-170 (code size) and EIP-3860 (initcode size) limits."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7907.md"
+		},
+		{
+			"eipNumber": 7949,
+			"totalScore": 1,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 1,
+					"notes": "We only have add the proposed json schema to the codebase to ensure our hive simulators are still working."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7949.md"
+		},
+		{
+			"eipNumber": 7971,
+			"totalScore": 16,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "New gas accounting for TLOAD/TSTORE with dynamic allocation cost (GAS_TSTORE_ALLOCATE=24 for fresh slots). Affects existing EIP-1153 gas mechanisms and will require updates to existing transient storage tests."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0,
+					"notes": "No blob gas changes."
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0,
+					"notes": "No gas refund mechanism introduced."
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 2,
+					"notes": "Existing EIP-1153 test suite substantially affected: gas constants in `spec.py` need updating, gas-dependent tests in `test_tstorage_execution_contexts.py` will break, and failure mode tests need extension for new MAX_TRANSIENT_SLOTS halt condition."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0,
+					"notes": "No t8n interface changes required; transient_slots_used is internal EVM state."
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0,
+					"notes": "No cryptographic mechanisms introduced."
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Multiple boundaries: MAX_TRANSIENT_SLOTS limit (131,072), slot uniqueness tracking across contracts and nested calls, fresh vs existing slot allocation costs, counter persistence across message calls."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0,
+					"notes": "No RLP validation changes."
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0,
+					"notes": "No Engine API modifications."
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0,
+					"notes": "No Engine API encoding changes."
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0,
+					"notes": "No system contracts introduced."
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0,
+					"notes": "No system contract modifications."
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0,
+					"notes": "No new opcodes; TLOAD/TSTORE already exist from EIP-1153."
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 3,
+					"notes": "TSTORE has a new failure mode: exceptional halt when transaction-global counter exceeds MAX_TRANSIENT_SLOTS. This is a behavioral change beyond gas costs - existing tests cover REVERT/INVALID/OOG/stack failures, but not this new limit-based halt."
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0,
+					"notes": "No precompiles introduced."
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0,
+					"notes": "No precompile modifications."
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0,
+					"notes": "No encoding changes."
+				},
+				{
+					"name": "New transaction types",
+					"score": 0,
+					"notes": "No new transaction types."
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0,
+					"notes": "No transaction validity changes; the slot limit causes exceptional halt during execution, not transaction rejection."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0,
+					"notes": "No new block or header fields."
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0,
+					"notes": "Counter initialized at transaction start (not fork activation); per template note, initialization is not a modification."
+				},
+				{
+					"name": "Performance risks",
+					"score": 2,
+					"notes": "Significantly reduced gas costs (95% reduction for TLOAD) enable more transient storage operations per block. Needs benchmarking to validate DoS resistance with the 131,072 slot limit."
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "The slot limit is a DoS prevention mechanism that interacts with EVM execution. Incorrect implementation could allow memory exhaustion attacks. Requires targeted security review."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 2,
+					"notes": "Directly modifies EIP-1153 gas costs and adds constraints. Requires coordinated testing with existing transient storage behavior; existing EIP-1153 test vectors need updating."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7971.md"
+		},
+		{
+			"eipNumber": 7976,
+			"totalScore": 5,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 1,
+					"notes": "Affects an existing mechanism for which tests are already prepared to be automatically updated."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 2,
+					"notes": "Pattern affects many tests but the test framework is already well prepared for this change due work already done in EIP-7623 testing. However, static tests might break after these change because these have to be manually updated."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0,
+					"notes": "Contains edge-cases but automatic test generators for these conditions already exist as part of tests for EIP-7623."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 2,
+					"notes": "Mechanism affects validity, but we only have to pay attention to the fork transition when the values change, as the rest of the scenarios will be automatically updated by updating a few constants."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7976.md"
+		},
+		{
+			"eipNumber": 7981,
+			"totalScore": 6,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 2,
+					"notes": "It's a small change but we also have to update the intrinsic gas cost calculator and probably its interface used in many access list tests to include checking the bytes in them."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 2,
+					"notes": "We have to update tests that rely on the exact intrinsic gas cost of the transactions and use access lists. Mid complexity because number of tests is not that many."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 1,
+					"notes": "Checks for the type of byte require boundary condition checks but minimal complexity."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "Modifies the intrinsic gas cost calculation."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7981.md"
+		},
+		{
+			"eipNumber": 7997,
+			"totalScore": 5,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 2,
+					"notes": "A new system contract is added in the precompile range."
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 1,
+					"notes": "The EIP adds a new system contract at the next fork. It does not affect state but it might be called an 'internal variable' depending on how this is defined exactly."
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "There is an open frontrunning risk that has not been solved. Whether this qualifies as security risk or inconvenience is subjective."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-7997.md"
+		},
+		{
+			"eipNumber": 8024,
+			"totalScore": 6,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 3,
+					"notes": "Introduces 3 new opcodes"
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 1,
+					"notes": "Performance may be impacted if a client implementation doesn't keep the whole stack in memory"
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8024.md"
+		},
+		{
+			"eipNumber": 8030,
+			"totalScore": 11,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 1,
+					"notes": "Introduces penalty of 500 gas when this signature algorithm is used."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Previously written tests assume that secp256k1, not secp256r1 is used for signatures. Retrospectively adding a new case that needs to be checked for throughout the framework, which even affects the gas cost, is tremendous testing overhead."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 1,
+					"notes": "secp256r1 exists in clients already and is a well known algorithm."
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 3,
+					"notes": "Having to add another check throughout the framework that determines the signature algorithm used which may or may not affect gas cost requires a larger review of the existing testing framework."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 1,
+					"notes": "The EIP author notes that some performed tests show that verifying secp256r1 signatures can be slower than verifying secp256k1 signatures. It is unclear whether 500 gas is a reasonable cost increases and verifying this chosen value will add even more overhead."
+				},
+				{
+					"name": "Security risks",
+					"score": 1,
+					"notes": "The EIP increases the overall complexity of verifying signatures which in itself brings non-zero security risk."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 1,
+					"notes": "Introduces new gas-related edge cases (e.g. 500 added gas might be the difference between tx gas limit being overshot or not)."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8030.md"
+		},
+		{
+			"eipNumber": 8032,
+			"totalScore": 21,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "Increases complexity of SSTORE gas cost which poses a challenge for our existing tests (especially static tests that have not been ported yet)."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Any test that uses SSTORE is potentially affected."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 3,
+					"notes": "Due to varying database implementations and sync modes, the proposed transition process is risky due to edge and boundary conditions."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 1,
+					"notes": "The cost of SSTORE can be hard to predict with this EIP."
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 3,
+					"notes": "Adds new field for account RLP in state to keep track of amount of storage slots a contract has."
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 0
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0,
+					"notes": "New field for account RLP in state though."
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 2,
+					"notes": "Introduces a transition process that should be pre-run by clients to prepare for new fork activation."
+				},
+				{
+					"name": "Performance risks",
+					"score": 3,
+					"notes": "The proposed transition process is computationally expensive (IO heavy)."
+				},
+				{
+					"name": "Security risks",
+					"score": 3,
+					"notes": "Due to varying database implementations and sync modes, the proposed transition process is potentially error-prone."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8032.md"
+		},
+		{
+			"eipNumber": 8037,
+			"totalScore": 28,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 8,
+					"notes": "GAS_CREATE + GAS_CODE_DEPOSIT can be considered the same category of change; CALL by itself requires testing must be separated; SSTORE requires its own testing plus the new multidimensional metering logic; EOA changes are simple and reduced in scope."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 2,
+					"notes": "Refund tests are indirectly affected by the SSTORE change."
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 9,
+					"notes": "CREATE, CALL, and SSTORE are values that have not been updated since Frontier. This change will break an excessive amount of static tests (https://github.com/ethereum/execution-specs/tree/forks/osaka/tests/static) and will require some rework in existing python tests. Counting each of these as a multiplier for this row."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 3,
+					"notes": "Bundling all changes into this single row since they are similar."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 4,
+					"notes": "Modifies the contract creation from a contract-creating transaction, and the EOA delegation cost."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 0
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 2,
+					"notes": "Considering contract creation and account calling are so fundamental, this will require oversight on other EIPs that are CFI'd."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8037.md"
+		},
+		{
+			"eipNumber": 8038,
+			"totalScore": 20,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "Updated mechanism introduced to cold and warm account accesses"
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 1,
+					"notes": "`GAS_STORAGE_CLEAR_REFUND` is modified."
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "11 opcodes affected"
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 2,
+					"notes": "Many edge-case and boundary condition prone mechanisms"
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 2,
+					"notes": "Access list cost change which affects type 1 and type 2 intrinsic gas."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 3,
+					"notes": "New values are unspecified, and the EIP does not have current benchmarking numbers yet"
+				},
+				{
+					"name": "Security risks",
+					"score": 3,
+					"notes": "Any time gas costs are modified introduces inherent risk. Better specification may bring this number down."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 3,
+					"notes": "Strong interactions with EIP-8032, EIP-2926, EIP-2929, EIP-2930/EIP-1559,and EIP-7928."
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8038.md"
+		},
+		{
+			"eipNumber": 8051,
+			"totalScore": 21,
+			"tier": "High",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 0
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 6,
+					"notes": "Cryptographically-related precompiles require exhaustive testing and performance benchmarking."
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 6,
+					"notes": "This EIP adds 2 precompiles at once."
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "A transaction is only valid when its signature is valid, if the proposed precompiles can be used to sign transactions then it affects tx validity mechanisms."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 2
+				},
+				{
+					"name": "Security risks",
+					"score": 6,
+					"notes": "Precompiles are risky, cryptography-related precompiles are even riskier. And this EIP proposes two of them at the same time."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8051.md"
+		},
+		{
+			"eipNumber": 8058,
+			"totalScore": 14,
+			"tier": "Medium",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 3,
+					"notes": "EIP wants to make duplicate contract deployment cheap."
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 3,
+					"notes": "Gas cost of existing tests might have to be revisited."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 3,
+					"notes": "If transaction execution were to be fully parallelized this EIP could lead to critical edge cases."
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0,
+					"notes": "The EIP avoids a new tx type by using the existing access list mechanic."
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 3,
+					"notes": "Transactions that might have run out of gas (or exceed the block gas limit) in the past might now be valid due to decreased contract deployment cost."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "If transaction execution were to be fully parallelized this EIP could lead to critical edge cases."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8058.md"
+		},
+		{
+			"eipNumber": 8070,
+			"totalScore": 7,
+			"tier": "Low",
+			"anchors": [
+				{
+					"name": "EVM Gas rule changes",
+					"score": 0
+				},
+				{
+					"name": "Blob gas accounting changes",
+					"score": 0
+				},
+				{
+					"name": "New EVM gas refund",
+					"score": 0
+				},
+				{
+					"name": "Patterns affecting pre-existing tests",
+					"score": 1,
+					"notes": "Blob tests might have to be revisited to account for cases in which nodes probabilistically act as sampler instead of provider."
+				},
+				{
+					"name": "Transition-tool interface changes",
+					"score": 0
+				},
+				{
+					"name": "Cryptography-related testing",
+					"score": 0
+				},
+				{
+					"name": "Edge/boundary conditions",
+					"score": 0
+				},
+				{
+					"name": "Block syncing changes",
+					"score": 0
+				},
+				{
+					"name": "Engine API changes",
+					"score": 3,
+					"notes": "The EIP proposes Engine API extensions (`engine_blobCustodyUpdatedV1` and `engine_getBlobsV4`)."
+				},
+				{
+					"name": "Engine API encoding changes",
+					"score": 0
+				},
+				{
+					"name": "Added system contracts",
+					"score": 0
+				},
+				{
+					"name": "Modified system contracts",
+					"score": 0
+				},
+				{
+					"name": "Added opcodes",
+					"score": 0
+				},
+				{
+					"name": "Modified opcodes",
+					"score": 0
+				},
+				{
+					"name": "Added precompiles",
+					"score": 0
+				},
+				{
+					"name": "Modified precompiles",
+					"score": 0
+				},
+				{
+					"name": "Encoding changes (RLP/SSZ)",
+					"score": 0
+				},
+				{
+					"name": "New transaction types",
+					"score": 0
+				},
+				{
+					"name": "New or modified transaction validity mechanisms",
+					"score": 1,
+					"notes": "Type 3 transactions should only be valid if the blob data is actually available, the proposed EIP makes it slightly more complicated to verify that this is the case."
+				},
+				{
+					"name": "New block / header fields",
+					"score": 0
+				},
+				{
+					"name": "New fork activation mechanism",
+					"score": 0
+				},
+				{
+					"name": "Performance risks",
+					"score": 0
+				},
+				{
+					"name": "Security risks",
+					"score": 2,
+					"notes": "The probabilistic sampling approach (and added sampling noise) have to be thoroughly verified and limit-tested in devnets and testnets. There is a non-zero chance with `p=0.15` that a blob is not available to anyone."
+				},
+				{
+					"name": "Cross-EIP interactions",
+					"score": 0
+				}
+			],
+			"assessmentUrl": "https://github.com/ethsteel/pm/blob/main/complexity_assessments/EIPs/EIP-8070.md"
+		}
+	]
+}
