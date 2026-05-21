@@ -1,0 +1,44 @@
+name: Netlify Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_snapshot:
+        description: "Optional snapshot to sync before deploy"
+        required: false
+        type: string
+      force_rebuild:
+        description: "Force rebuild"
+        default: false
+        type: boolean
+      deploy_target:
+        description: "preview or prod"
+        required: true
+        default: "preview"
+        type: choice
+        options: ["preview", "prod"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify
+      - if: ${{ inputs.deploy_target == 'preview' }}
+        run: npx netlify deploy --dir=dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - if: ${{ inputs.deploy_target == 'prod' }}
+        run: npx netlify deploy --prod --dir=dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

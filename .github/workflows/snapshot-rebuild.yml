@@ -1,0 +1,56 @@
+name: Snapshot Rebuild
+
+on:
+  repository_dispatch:
+    types: [forkcast-data-snapshot]
+  workflow_dispatch:
+    inputs:
+      target_snapshot:
+        description: "Target snapshot ID"
+        required: false
+        type: string
+      force_rebuild:
+        description: "Force rebuild"
+        required: false
+        default: false
+        type: boolean
+      deploy_target:
+        description: "Netlify deploy target"
+        required: true
+        default: "preview"
+        type: choice
+        options: ["preview", "prod"]
+  schedule:
+    - cron: "*/30 * * * *"
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Sync pinned snapshot
+        run: pnpm data:forkcast-snapshot -- --latest-root "${FORKCAST_DATA_LATEST_ROOT}" --data-base-url "${FORKCAST_DATA_BASE_URL}"
+        env:
+          FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT || '../forkcast-data/dist/latest' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data.netlify.app' }}
+      - run: pnpm verify
+      - name: Deploy preview
+        if: ${{ inputs.deploy_target != 'prod' }}
+        run: npx netlify deploy --dir=dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy production
+        if: ${{ inputs.deploy_target == 'prod' }}
+        run: npx netlify deploy --prod --dir=dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

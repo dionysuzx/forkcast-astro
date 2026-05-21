@@ -26,6 +26,7 @@ import {
 	secondsToTimestamp as formatSecondsTimestamp,
 	timestampToSeconds as timestampToSecondsValue,
 } from "@/domain/calls/call-log";
+import { canonicalCallDataUrl } from "@/domain/forkcast-data/snapshot";
 import { breakoutArtifactsForCall } from "@/domain/protocol-events/breakout-artifacts";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
@@ -213,6 +214,14 @@ const issueNumber = artifacts?.config?.issue ?? call?.issue;
                                 #{issueNumber}
                               </a>
                             </span>
+                          </>
+                        )}
+                        {call && (
+                          <>
+                            <span class="hidden text-slate-300 sm:inline dark:text-slate-600">|</span>
+                            <a href={canonicalCallDataUrl(call)} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-teal-700 underline decoration-1 underline-offset-2 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
+                              canonical JSON
+                            </a>
                           </>
                         )}
                         <span class="flex-1" />

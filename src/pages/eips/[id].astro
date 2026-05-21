@@ -11,6 +11,7 @@ import {
 } from "@lucide/astro";
 import { marked } from "marked";
 import { layerBadgeClass } from "@/domain/display";
+import { canonicalEipDataUrl } from "@/domain/forkcast-data/snapshot";
 import { getProposalCallLink } from "@/domain/proposals/call-links";
 import {
 	type ForkRelationship,
@@ -296,6 +297,12 @@ const timelineItemsForFork = (fork: ForkRelationship): TimelineItem[] => {
                   ))
                 }
                 <span id="author-copy-status" class="ml-2 text-xs text-emerald-600 dark:text-emerald-400" aria-live="polite"></span>
+              </p>
+              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Canonical data:
+                <a href={canonicalEipDataUrl(proposal.id)} target="_blank" rel="noopener noreferrer" class="font-mono text-teal-700 underline decoration-1 underline-offset-2 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
+                  /latest/eips/{proposal.id}.json
+                </a>
               </p>
             </div>
             <div class="flex shrink-0 items-center gap-2">

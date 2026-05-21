@@ -14,9 +14,11 @@
 		"data:complexity": "node scripts/sync-steel-complexity.mjs",
 		"data:devnets": "node scripts/sync-devnet-networks.mjs",
 		"data:upcoming-calls": "node scripts/sync-upcoming-calls.mjs",
+		"data:forkcast-snapshot": "node scripts/sync-forkcast-data-snapshot.mjs",
+		"test:data-snapshot": "node tests/forkcast-data-snapshot.test.mjs",
 		"biome:check": "biome check .",
 		"format": "biome check --write .",
-		"verify": "pnpm astro check && pnpm biome check . && pnpm build",
+		"verify": "pnpm test:data-snapshot && pnpm astro check && pnpm biome check . && pnpm build",
 		"prepare": "husky"
 	},
 	"dependencies": {
