@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260522T141456Z-21fddfe0097e",
+	"snapshotId": "20260522T142906Z-77f791958ecb",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-22T14:21:18.030Z",
+	"updatedAt": "2026-05-22T14:35:19.520Z",
 	"counts": {
-		"records": 29388,
+		"records": 29389,
 		"eips": 921,
-		"calls": 720,
-		"decisions": 256,
-		"searchDocuments": 31449
+		"calls": 721,
+		"decisions": 257,
+		"searchDocuments": 31453
 	},
 	"kindCounts": {
-		"call": 720,
+		"call": 721,
 		"devnet": 12,
 		"proposal": 921,
 		"thread": 26639,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260522T141456Z-21fddfe0097e",
-		"generated_at": "2026-05-22T14:14:56.694Z",
-		"catalog_path": "/snapshots/20260522T141456Z-21fddfe0097e/catalog.json",
-		"record_count": 29388
+		"snapshot_id": "20260522T142906Z-77f791958ecb",
+		"generated_at": "2026-05-22T14:29:06.738Z",
+		"catalog_path": "/snapshots/20260522T142906Z-77f791958ecb/catalog.json",
+		"record_count": 29389
 	},
 	"eips": [
 		{
@@ -6790,6 +6790,15 @@
 			"title": "PM Lean Fixture Live Cycle 78: SFI movement watch",
 			"canonical_json_url": "/latest/calls/fixture-acde/900078.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900078.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.22-900079",
+			"series": "fixture-acde",
+			"number": 900079,
+			"date": "2026-05-22",
+			"title": "PM Lean Fixture Live Cycle 79: Glamsterdam BAL status",
+			"canonical_json_url": "/latest/calls/fixture-acde/900079.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900079.md"
 		},
 		{
 			"id": "acde/2026.05.21-237",
