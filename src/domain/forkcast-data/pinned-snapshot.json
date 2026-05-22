@@ -1,30 +1,30 @@
 {
-	"snapshotId": "20260522T213651Z-935a7bcd6921",
+	"snapshotId": "20260522T215217Z-46695d6065ae",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-22T21:44:00.720Z",
+	"updatedAt": "2026-05-22T21:58:45.828Z",
 	"counts": {
-		"records": 29420,
-		"eips": 921,
+		"records": 29424,
+		"eips": 925,
 		"calls": 740,
 		"decisions": 275,
-		"searchDocuments": 31539
+		"searchDocuments": 31547
 	},
 	"kindCounts": {
 		"call": 740,
 		"devnet": 12,
-		"proposal": 921,
+		"proposal": 925,
 		"thread": 26650,
 		"topic": 1094,
 		"upgrade": 3
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260522T213651Z-935a7bcd6921",
-		"generated_at": "2026-05-22T21:36:51.802Z",
-		"catalog_path": "/snapshots/20260522T213651Z-935a7bcd6921/catalog.json",
-		"record_count": 29420
+		"snapshot_id": "20260522T215217Z-46695d6065ae",
+		"generated_at": "2026-05-22T21:52:17.068Z",
+		"catalog_path": "/snapshots/20260522T215217Z-46695d6065ae/catalog.json",
+		"record_count": 29424
 	},
 	"eips": [
 		{
@@ -6473,6 +6473,34 @@
 			"status": "Draft",
 			"canonical_url": "/latest/eips/8253.json",
 			"markdown_url": "/latest/eips/8253.md"
+		},
+		{
+			"id": 8254,
+			"title": "EIP-8254: Cap deposit requests per block",
+			"status": "Draft",
+			"canonical_url": "/latest/eips/8254.json",
+			"markdown_url": "/latest/eips/8254.md"
+		},
+		{
+			"id": 8261,
+			"title": "EIP-8261: Gas Limit Schedule",
+			"status": "Draft",
+			"canonical_url": "/latest/eips/8261.json",
+			"markdown_url": "/latest/eips/8261.md"
+		},
+		{
+			"id": 8266,
+			"title": "EIP-8266: Expiring Nonces for Frame Transactions",
+			"status": "Draft",
+			"canonical_url": "/latest/eips/8266.json",
+			"markdown_url": "/latest/eips/8266.md"
+		},
+		{
+			"id": 8268,
+			"title": "EIP-8268: Storage Roots in Block Access Lists",
+			"status": "Draft",
+			"canonical_url": "/latest/eips/8268.json",
+			"markdown_url": "/latest/eips/8268.md"
 		}
 	],
 	"calls": [
