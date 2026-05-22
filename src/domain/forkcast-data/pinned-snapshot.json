@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260522T231514Z-61cac9db1d66",
+	"snapshotId": "20260522T232433Z-1d1d8b81da35",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-22T23:22:29.231Z",
+	"updatedAt": "2026-05-22T23:31:08.969Z",
 	"counts": {
-		"records": 29428,
+		"records": 29429,
 		"eips": 925,
-		"calls": 743,
-		"decisions": 278,
-		"searchDocuments": 31560
+		"calls": 744,
+		"decisions": 279,
+		"searchDocuments": 31564
 	},
 	"kindCounts": {
-		"call": 743,
+		"call": 744,
 		"devnet": 12,
 		"proposal": 925,
 		"thread": 26651,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260522T231514Z-61cac9db1d66",
-		"generated_at": "2026-05-22T23:15:14.852Z",
-		"catalog_path": "/snapshots/20260522T231514Z-61cac9db1d66/catalog.json",
-		"record_count": 29428
+		"snapshot_id": "20260522T232433Z-1d1d8b81da35",
+		"generated_at": "2026-05-22T23:24:33.016Z",
+		"catalog_path": "/snapshots/20260522T232433Z-1d1d8b81da35/catalog.json",
+		"record_count": 29429
 	},
 	"eips": [
 		{
@@ -6593,6 +6593,15 @@
 			"title": "PM Lean Fixture Live Cycle 100: Glamsterdam BAL status",
 			"canonical_json_url": "/latest/calls/fixture-acde/900100.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900100.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.23-900101",
+			"series": "fixture-acde",
+			"number": 900101,
+			"date": "2026-05-23",
+			"title": "PM Lean Fixture Live Cycle 101: EIP-7702 wallet impact",
+			"canonical_json_url": "/latest/calls/fixture-acde/900101.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900101.md"
 		},
 		{
 			"id": "fixture-acde/2026.05.22-900048",
