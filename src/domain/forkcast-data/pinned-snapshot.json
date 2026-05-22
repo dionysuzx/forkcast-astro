@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260522T205838Z-81e1780989c7",
+	"snapshotId": "20260522T211301Z-3ffdca157b0c",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-22T21:04:27.702Z",
+	"updatedAt": "2026-05-22T21:19:45.310Z",
 	"counts": {
-		"records": 29417,
+		"records": 29418,
 		"eips": 921,
-		"calls": 738,
-		"decisions": 273,
-		"searchDocuments": 31530
+		"calls": 739,
+		"decisions": 274,
+		"searchDocuments": 31534
 	},
 	"kindCounts": {
-		"call": 738,
+		"call": 739,
 		"devnet": 12,
 		"proposal": 921,
 		"thread": 26649,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260522T205838Z-81e1780989c7",
-		"generated_at": "2026-05-22T20:58:38.628Z",
-		"catalog_path": "/snapshots/20260522T205838Z-81e1780989c7/catalog.json",
-		"record_count": 29417
+		"snapshot_id": "20260522T211301Z-3ffdca157b0c",
+		"generated_at": "2026-05-22T21:13:01.979Z",
+		"catalog_path": "/snapshots/20260522T211301Z-3ffdca157b0c/catalog.json",
+		"record_count": 29418
 	},
 	"eips": [
 		{
@@ -6520,6 +6520,15 @@
 			"title": "Fast Confirmation Rule (FCR) #8, May 26, 2026",
 			"canonical_json_url": "/latest/calls/fast-confirmation-rule-fcr/8.json",
 			"canonical_markdown_url": "/latest/calls/fast-confirmation-rule-fcr/8.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.23-900096",
+			"series": "fixture-acde",
+			"number": 900096,
+			"date": "2026-05-23",
+			"title": "PM Lean Fixture Live Cycle 96: SFI movement watch",
+			"canonical_json_url": "/latest/calls/fixture-acde/900096.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900096.md"
 		},
 		{
 			"id": "fixture-acde/2026.05.22-900048",
