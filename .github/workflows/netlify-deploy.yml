@@ -45,13 +45,18 @@ jobs:
           FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
           FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-canonical.netlify.app' }}
       - run: pnpm verify
+      - name: Capture snapshot id
+        id: snapshot
+        run: |
+          snapshot_id=$(node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync('forkcast-data.snapshot.json', 'utf8')).snapshotId)")
+          echo "snapshot_id=$snapshot_id" >> "$GITHUB_OUTPUT"
       - if: ${{ inputs.deploy_target == 'preview' }}
-        run: npx netlify deploy --no-build --dir=dist
+        run: npx netlify deploy --no-build --dir=dist --message "Forkcast Astro snapshot ${{ steps.snapshot.outputs.snapshot_id }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - if: ${{ inputs.deploy_target == 'prod' }}
-        run: npx netlify deploy --prod --no-build --dir=dist
+        run: npx netlify deploy --prod --no-build --dir=dist --message "Forkcast Astro snapshot ${{ steps.snapshot.outputs.snapshot_id }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
