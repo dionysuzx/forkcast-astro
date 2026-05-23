@@ -103,14 +103,14 @@ jobs:
       - name: Upload resolved snapshot metadata
         if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: |
-          mkdir -p .forkcast-deploy
-          cp forkcast-data.snapshot.json .forkcast-deploy/forkcast-data.snapshot.json
-          cp src/domain/forkcast-data/pinned-snapshot.json .forkcast-deploy/pinned-snapshot.json
+          mkdir -p forkcast-deploy
+          cp forkcast-data.snapshot.json forkcast-deploy/forkcast-data.snapshot.json
+          cp src/domain/forkcast-data/pinned-snapshot.json forkcast-deploy/pinned-snapshot.json
       - uses: actions/upload-artifact@v4
         if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         with:
           name: forkcast-astro-snapshot-${{ steps.snapshot.outputs.remote_id }}
-          path: .forkcast-deploy
+          path: forkcast-deploy
       - uses: actions/configure-pages@v4
         if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'pages' }}
       - uses: actions/upload-pages-artifact@v3
