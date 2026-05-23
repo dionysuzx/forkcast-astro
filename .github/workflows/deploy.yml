@@ -31,6 +31,13 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Sync latest data snapshot
+        run: |
+          latest_root="${FORKCAST_DATA_LATEST_ROOT:-${FORKCAST_DATA_BASE_URL%/}/latest}"
+          pnpm data:forkcast-snapshot -- --latest-root "$latest_root" --data-base-url "$FORKCAST_DATA_BASE_URL"
+        env:
+          FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://dionysuzx.github.io/forkcast-data' }}
       - run: pnpm verify
       - run: pnpm pages:base
       - uses: actions/configure-pages@v4
