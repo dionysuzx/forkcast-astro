@@ -1,8 +1,8 @@
 {
 	"snapshotId": "20260523T182627Z-0a585d575469",
 	"source": "forkcast-data",
-	"latestRoot": "https://forkcast-data-dionysuzx.netlify.app/latest",
-	"dataBaseUrl": "https://forkcast-data-dionysuzx.netlify.app",
+	"latestRoot": "https://dionysuzx.github.io/forkcast-data/latest",
+	"dataBaseUrl": "https://dionysuzx.github.io/forkcast-data",
 	"updatedAt": "2026-05-23T18:33:39.241Z",
 	"counts": {
 		"records": 29487,
