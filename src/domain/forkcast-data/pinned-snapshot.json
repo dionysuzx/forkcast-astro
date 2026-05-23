@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260523T063430Z-922b566c664f",
+	"snapshotId": "20260523T071045Z-12c466e1c85c",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-23T06:41:16.371Z",
+	"updatedAt": "2026-05-23T07:18:17.065Z",
 	"counts": {
-		"records": 29450,
+		"records": 29451,
 		"eips": 925,
-		"calls": 763,
-		"decisions": 298,
-		"searchDocuments": 31642
+		"calls": 764,
+		"decisions": 299,
+		"searchDocuments": 31646
 	},
 	"kindCounts": {
-		"call": 763,
+		"call": 764,
 		"devnet": 12,
 		"proposal": 925,
 		"thread": 26653,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260523T063430Z-922b566c664f",
-		"generated_at": "2026-05-23T06:34:30.391Z",
-		"catalog_path": "/snapshots/20260523T063430Z-922b566c664f/catalog.json",
-		"record_count": 29450
+		"snapshot_id": "20260523T071045Z-12c466e1c85c",
+		"generated_at": "2026-05-23T07:10:45.508Z",
+		"catalog_path": "/snapshots/20260523T071045Z-12c466e1c85c/catalog.json",
+		"record_count": 29451
 	},
 	"eips": [
 		{
@@ -6476,7 +6476,7 @@
 		},
 		{
 			"id": 8254,
-			"title": "EIP-8254: Cap deposit requests per block",
+			"title": "EIP-8254: Cap Deposit Requests Per Block",
 			"status": "Draft",
 			"canonical_url": "/latest/eips/8254.json",
 			"markdown_url": "/latest/eips/8254.md"
@@ -6773,6 +6773,15 @@
 			"title": "PM Lean Fixture Live Cycle 120: SFI movement watch",
 			"canonical_json_url": "/latest/calls/fixture-acde/900120.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900120.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.23-900121",
+			"series": "fixture-acde",
+			"number": 900121,
+			"date": "2026-05-23",
+			"title": "PM Lean Fixture Live Cycle 121: Glamsterdam BAL status",
+			"canonical_json_url": "/latest/calls/fixture-acde/900121.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900121.md"
 		},
 		{
 			"id": "fixture-acde/2026.05.22-900048",
