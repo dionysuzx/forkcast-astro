@@ -1,9 +1,9 @@
 {
-	"snapshotId": "20260523T085740Z-52b20ed1b23a",
+	"snapshotId": "20260523T090751Z-52b20ed1b23a",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-23T09:05:44.718Z",
+	"updatedAt": "2026-05-23T09:14:13.317Z",
 	"counts": {
 		"records": 29455,
 		"eips": 925,
@@ -21,9 +21,9 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260523T085740Z-52b20ed1b23a",
-		"generated_at": "2026-05-23T08:57:40.170Z",
-		"catalog_path": "/snapshots/20260523T085740Z-52b20ed1b23a/catalog.json",
+		"snapshot_id": "20260523T090751Z-52b20ed1b23a",
+		"generated_at": "2026-05-23T09:07:51.132Z",
+		"catalog_path": "/snapshots/20260523T090751Z-52b20ed1b23a/catalog.json",
 		"record_count": 29455
 	},
 	"eips": [
