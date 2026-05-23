@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260523T140900Z-d5a747e4c61d",
+	"snapshotId": "20260523T144259Z-c7edd0b7c061",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-23T14:15:35.986Z",
+	"updatedAt": "2026-05-23T14:50:23.820Z",
 	"counts": {
-		"records": 29476,
+		"records": 29478,
 		"eips": 925,
-		"calls": 782,
-		"decisions": 317,
-		"searchDocuments": 31725
+		"calls": 784,
+		"decisions": 319,
+		"searchDocuments": 31733
 	},
 	"kindCounts": {
-		"call": 782,
+		"call": 784,
 		"devnet": 12,
 		"proposal": 925,
 		"thread": 26660,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260523T140900Z-d5a747e4c61d",
-		"generated_at": "2026-05-23T14:09:00.055Z",
-		"catalog_path": "/snapshots/20260523T140900Z-d5a747e4c61d/catalog.json",
-		"record_count": 29476
+		"snapshot_id": "20260523T144259Z-c7edd0b7c061",
+		"generated_at": "2026-05-23T14:42:59.519Z",
+		"catalog_path": "/snapshots/20260523T144259Z-c7edd0b7c061/catalog.json",
+		"record_count": 29478
 	},
 	"eips": [
 		{
@@ -6944,6 +6944,24 @@
 			"title": "PM Lean Fixture Live Cycle 139: Glamsterdam BAL status",
 			"canonical_json_url": "/latest/calls/fixture-acde/900139.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900139.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.23-900140",
+			"series": "fixture-acde",
+			"number": 900140,
+			"date": "2026-05-23",
+			"title": "PM Lean Fixture Live Cycle 140: EIP-7702 wallet impact",
+			"canonical_json_url": "/latest/calls/fixture-acde/900140.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900140.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.23-900141",
+			"series": "fixture-acde",
+			"number": 900141,
+			"date": "2026-05-23",
+			"title": "PM Lean Fixture Live Cycle 141: SFI movement watch",
+			"canonical_json_url": "/latest/calls/fixture-acde/900141.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900141.md"
 		},
 		{
 			"id": "fixture-acde/2026.05.22-900048",
