@@ -43,7 +43,7 @@ jobs:
         env:
           TARGET_SNAPSHOT: ${{ inputs.target_snapshot }}
           FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-canonical.netlify.app' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data-dionysuzx.netlify.app' }}
       - run: pnpm verify
       - name: Capture snapshot id
         id: snapshot
