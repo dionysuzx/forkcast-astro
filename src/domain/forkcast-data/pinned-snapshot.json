@@ -1,18 +1,18 @@
 {
-	"snapshotId": "20260523T173445Z-5bcc74a4215b",
+	"snapshotId": "20260523T175931Z-c5b1af9d5470",
 	"source": "forkcast-data",
 	"latestRoot": "https://forkcast-data-canonical.netlify.app/latest",
 	"dataBaseUrl": "https://forkcast-data-canonical.netlify.app",
-	"updatedAt": "2026-05-23T17:42:09.088Z",
+	"updatedAt": "2026-05-23T18:07:09.003Z",
 	"counts": {
-		"records": 29486,
+		"records": 29487,
 		"eips": 925,
-		"calls": 792,
-		"decisions": 327,
-		"searchDocuments": 31765
+		"calls": 793,
+		"decisions": 328,
+		"searchDocuments": 31769
 	},
 	"kindCounts": {
-		"call": 792,
+		"call": 793,
 		"devnet": 12,
 		"proposal": 925,
 		"thread": 26660,
@@ -21,10 +21,10 @@
 	},
 	"manifest": {
 		"version": 1,
-		"snapshot_id": "20260523T173445Z-5bcc74a4215b",
-		"generated_at": "2026-05-23T17:34:45.788Z",
-		"catalog_path": "/snapshots/20260523T173445Z-5bcc74a4215b/catalog.json",
-		"record_count": 29486
+		"snapshot_id": "20260523T175931Z-c5b1af9d5470",
+		"generated_at": "2026-05-23T17:59:31.697Z",
+		"catalog_path": "/snapshots/20260523T175931Z-c5b1af9d5470/catalog.json",
+		"record_count": 29487
 	},
 	"eips": [
 		{
@@ -6602,6 +6602,15 @@
 			"title": "PM Lean Fixture Live Cycle 149: EIP-7702 wallet impact",
 			"canonical_json_url": "/latest/calls/fixture-acde/900149.json",
 			"canonical_markdown_url": "/latest/calls/fixture-acde/900149.md"
+		},
+		{
+			"id": "fixture-acde/2026.05.24-900150",
+			"series": "fixture-acde",
+			"number": 900150,
+			"date": "2026-05-24",
+			"title": "PM Lean Fixture Live Cycle 150: SFI movement watch",
+			"canonical_json_url": "/latest/calls/fixture-acde/900150.json",
+			"canonical_markdown_url": "/latest/calls/fixture-acde/900150.md"
 		},
 		{
 			"id": "fixture-acde/2026.05.23-900096",
