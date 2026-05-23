@@ -1,4 +1,4 @@
-name: Pages Deploy
+name: Cloudflare Deploy
 
 on:
   workflow_dispatch:
@@ -12,29 +12,28 @@ on:
         default: false
         type: boolean
       deploy_target:
-        description: "pages or artifact-only"
+        description: "cloudflare or artifact-only"
         required: true
-        default: "pages"
+        default: "cloudflare"
         type: choice
-        options: ["pages", "artifact-only"]
+        options: ["cloudflare", "artifact-only"]
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: forkcast-astro-pages
+  group: forkcast-astro-cloudflare
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: cloudflare-pages
+      url: https://forkcast-astro.pages.dev
     env:
-      FORKCAST_PUBLIC_BASE_PATH: /forkcast-astro
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
@@ -57,9 +56,8 @@ jobs:
         env:
           TARGET_SNAPSHOT: ${{ inputs.target_snapshot }}
           FORKCAST_DATA_LATEST_ROOT: ${{ vars.FORKCAST_DATA_LATEST_ROOT }}
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://dionysuzx.github.io/forkcast-data' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data.pages.dev' }}
       - run: pnpm verify
-      - run: pnpm pages:base
       - name: Capture snapshot id
         id: snapshot
         run: |
@@ -67,14 +65,17 @@ jobs:
           echo "snapshot_id=$snapshot_id" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
-          name: forkcast-astro-pages-${{ steps.snapshot.outputs.snapshot_id }}
+          name: forkcast-astro-cloudflare-${{ steps.snapshot.outputs.snapshot_id }}
           path: dist
-      - uses: actions/configure-pages@v4
-        if: ${{ inputs.deploy_target == 'pages' }}
-      - uses: actions/upload-pages-artifact@v3
-        if: ${{ inputs.deploy_target == 'pages' }}
-        with:
-          path: dist
-      - id: deployment
-        if: ${{ inputs.deploy_target == 'pages' }}
-        uses: actions/deploy-pages@v4
+      - name: Deploy to Cloudflare Pages
+        if: ${{ inputs.deploy_target == 'cloudflare' }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN secret is required for Cloudflare Pages deploys" >&2
+            exit 1
+          fi
+          npx wrangler pages deploy dist \
+            --project-name forkcast-astro \
+            --branch main \
+            --commit-hash "${GITHUB_SHA}" \
+            --commit-message "Forkcast Astro snapshot ${{ steps.snapshot.outputs.snapshot_id }}"

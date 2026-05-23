@@ -17,9 +17,9 @@ on:
       deploy_target:
         description: "Deploy target"
         required: true
-        default: "pages"
+        default: "cloudflare"
         type: choice
-        options: ["pages", "artifact-only"]
+        options: ["cloudflare", "artifact-only"]
   schedule:
     - cron: "8 1,13 * * *"
 
@@ -28,14 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write
-      id-token: write
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: cloudflare-pages
+      url: https://forkcast-astro.pages.dev
     env:
-      DEPLOY_TARGET: ${{ inputs.deploy_target || vars.FORKCAST_ASTRO_DEPLOY_TARGET || 'pages' }}
-      FORKCAST_PUBLIC_BASE_PATH: /forkcast-astro
+      DEPLOY_TARGET: ${{ inputs.deploy_target || vars.FORKCAST_ASTRO_DEPLOY_TARGET || 'cloudflare' }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
@@ -49,8 +48,8 @@ jobs:
       - name: Check remote snapshot
         id: snapshot
         env:
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://dionysuzx.github.io/forkcast-data' }}
-          FORKCAST_ASTRO_SITE_URL: ${{ vars.FORKCAST_ASTRO_SITE_URL || 'https://dionysuzx.github.io/forkcast-astro' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data.pages.dev' }}
+          FORKCAST_ASTRO_SITE_URL: ${{ vars.FORKCAST_ASTRO_SITE_URL || 'https://forkcast-astro.pages.dev' }}
           FORCE_REBUILD: ${{ inputs.force_rebuild || false }}
           DISPATCH_SNAPSHOT: ${{ github.event.client_payload.snapshot }}
           INPUT_SNAPSHOT: ${{ inputs.target_snapshot || '' }}
@@ -66,7 +65,7 @@ jobs:
               if [ "$DISPATCH_SNAPSHOT" = "$latest_id" ]; then
                 break
               fi
-              echo "Waiting for GitHub Pages latest snapshot. expected=$DISPATCH_SNAPSHOT observed=$latest_id attempt=$attempt"
+              echo "Waiting for Cloudflare Pages latest snapshot. expected=$DISPATCH_SNAPSHOT observed=$latest_id attempt=$attempt"
               sleep 10
             done
             if [ "$DISPATCH_SNAPSHOT" != "$latest_id" ]; then
@@ -95,11 +94,9 @@ jobs:
         run: |
           pnpm data:forkcast-snapshot -- --latest-root "${{ steps.snapshot.outputs.latest_root }}" --data-base-url "$FORKCAST_DATA_BASE_URL"
         env:
-          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://dionysuzx.github.io/forkcast-data' }}
+          FORKCAST_DATA_BASE_URL: ${{ vars.FORKCAST_DATA_BASE_URL || 'https://forkcast-data.pages.dev' }}
       - if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: pnpm verify
-      - if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
-        run: pnpm pages:base
       - name: Upload resolved snapshot metadata
         if: ${{ steps.snapshot.outputs.should_rebuild == 'true' }}
         run: |
@@ -111,13 +108,16 @@ jobs:
         with:
           name: forkcast-astro-snapshot-${{ steps.snapshot.outputs.remote_id }}
           path: forkcast-deploy
-      - uses: actions/configure-pages@v4
-        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'pages' }}
-      - uses: actions/upload-pages-artifact@v3
-        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'pages' }}
-        with:
-          path: dist
-      - name: Deploy to GitHub Pages
+      - name: Deploy to Cloudflare Pages
         id: deployment
-        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'pages' }}
-        uses: actions/deploy-pages@v4
+        if: ${{ steps.snapshot.outputs.should_rebuild == 'true' && env.DEPLOY_TARGET == 'cloudflare' }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN secret is required for Cloudflare Pages deploys" >&2
+            exit 1
+          fi
+          npx wrangler pages deploy dist \
+            --project-name forkcast-astro \
+            --branch main \
+            --commit-hash "${GITHUB_SHA}" \
+            --commit-message "Forkcast Astro snapshot ${{ steps.snapshot.outputs.remote_id }}"

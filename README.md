@@ -27,8 +27,15 @@ The app avoids runtime product-data fetches by keeping build-time snapshots in t
 - `pnpm data:complexity`
 - `pnpm data:forkcast-snapshot`
 
-`forkcast-data.snapshot.json` is the local development baseline for the canonical data-plane snapshot used by Astro. The `Snapshot Rebuild` GitHub Action runs every 12 hours and also responds immediately to `forkcast-data` repository dispatches. When the deployed Astro site is behind the data-plane `/latest/manifest.json`, the workflow syncs the requested snapshot inside the Actions workspace, verifies the static build, uploads the resolved snapshot metadata as an Actions artifact, and deploys GitHub Pages without committing generated snapshot pins back to `main`.
+`forkcast-data.snapshot.json` is the local development baseline for the canonical data-plane snapshot used by Astro. The `Snapshot Rebuild` GitHub Action runs every 12 hours and also responds immediately to `forkcast-data` repository dispatches. When the deployed Astro site is behind the data-plane `/latest/manifest.json`, the workflow syncs the requested snapshot inside the Actions workspace, verifies the static build, uploads the resolved snapshot metadata as an Actions artifact, and deploys Cloudflare Pages without committing generated snapshot pins back to `main`.
 
-Each deploy exposes `/_snapshot.json`, so the exact deployed data snapshot remains machine-readable without using the application branch as deploy state. Scheduled and repository-dispatch runs deploy GitHub Pages by default; manual dispatch can choose an artifact-only run.
+Each deploy exposes `/_snapshot.json`, so the exact deployed data snapshot remains machine-readable without using the application branch as deploy state. Scheduled and repository-dispatch runs deploy Cloudflare Pages by default; manual dispatch can choose an artifact-only run.
+
+Production URLs:
+
+- Astro site: `https://forkcast-astro.pages.dev/`
+- Data plane: `https://forkcast-data.pages.dev/`
+
+Cloudflare Actions deploys require `CLOUDFLARE_API_TOKEN` as a repository secret and `CLOUDFLARE_ACCOUNT_ID` as a repository variable.
 
 Migration inventory, parity review, and benchmark artifacts are stored in `docs/migration/`.

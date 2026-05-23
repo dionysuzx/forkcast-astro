@@ -1,14 +1,14 @@
 {
-	"snapshotId": "20260523T182627Z-0a585d575469",
+	"snapshotId": "20260523T202344Z-0a585d575469",
 	"source": "forkcast-data",
-	"latestRoot": "https://dionysuzx.github.io/forkcast-data/latest",
-	"dataBaseUrl": "https://dionysuzx.github.io/forkcast-data",
-	"updatedAt": "2026-05-23T18:33:39.241Z",
+	"latestRoot": "https://forkcast-data.pages.dev/latest",
+	"dataBaseUrl": "https://forkcast-data.pages.dev",
+	"updatedAt": "2026-05-23T20:29:57.606Z",
 	"counts": {
 		"records": 29487,
 		"eips": 925,
 		"calls": 793,
 		"decisions": 328,
-		"searchDocuments": 31769
+		"searchDocuments": 0
 	}
 }
